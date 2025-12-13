@@ -18,10 +18,11 @@ public class Apartment {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "building_id", nullable = false)
     private Building building;
 
     @ManyToMany(mappedBy = "apartments", fetch = FetchType.LAZY)
-    private List<User> residents = new ArrayList<>();
+    private List<Resident> residents = new ArrayList<>();
 
     @OneToMany(mappedBy = "apartment", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Payment> payments = new ArrayList<>();

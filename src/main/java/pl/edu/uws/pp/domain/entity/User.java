@@ -31,32 +31,11 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @OneToMany(mappedBy = "manager", fetch = FetchType.LAZY)
-    private List<Building> managedBuildings = new ArrayList<>();
-
-    @ManyToMany(mappedBy = "apartments", fetch = FetchType.LAZY)
-    private List<Apartment> apartments = new ArrayList<>();
-
-    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Message> sentMessages = new ArrayList<>();
-
-    @ManyToMany(mappedBy = "recipients", fetch = FetchType.LAZY)
-    private List<Message> receivedMessages = new ArrayList<>();
-
-    @OneToMany(mappedBy = "reporting", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Failure> reportedFailures = new ArrayList<>();
-
-    @OneToMany(mappedBy = "assignedTo", fetch = FetchType.LAZY)
-    private List<Failure> assignedFailures = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Notification> notifications = new ArrayList<>();
-
-    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<File> uploadedFiles = new ArrayList<>();
-
-    @OneToMany(mappedBy = "recipient", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<File> receivedFiles = new ArrayList<>();
-
     private boolean enabled;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Manager managerProfile;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Resident residentProfile;
 }

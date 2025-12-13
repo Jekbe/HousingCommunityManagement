@@ -5,32 +5,40 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
-import pl.edu.uws.pp.domain.enums.PaymentStatus;
+import pl.edu.uws.pp.domain.enums.InvoiceStatus;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-@Entity
 @Getter
 @Setter
+@Entity
 @NoArgsConstructor
-public class Payment {
-
+public class Invoice {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "invoice_id", nullable = false, unique = true)
-    private Invoice invoice;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "apartment_id", nullable = false)
+    private Apartment apartment;
+
+    private String description;
 
     @Column(precision = 10, scale = 2, nullable = false)
     private BigDecimal amount;
 
-    @CreationTimestamp
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private LocalDateTime paidAt;
+    private InvoiceStatus status;
 
     @Column(nullable = false)
-    private String transactionId;
+    private LocalDateTime dueDate;
+
+    @CreationTimestamp
+    @Column(nullable = false)
+    private LocalDateTime createdAt;
+
+    @OneToOne(mappedBy = "invoice")
+    private Payment payment;
 }

@@ -19,14 +19,18 @@ public class Event {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "building_id", nullable = false)
     private Building building;
 
+    @Column(nullable = false)
     private String title;
 
     private String description;
 
+    @Column(nullable = false)
     private LocalDateTime eventTime;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private EventStatus status;
 }

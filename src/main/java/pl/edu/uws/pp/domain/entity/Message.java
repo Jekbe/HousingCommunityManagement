@@ -20,6 +20,7 @@ public class Message {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sender_id", nullable = false)
     private User sender;
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -28,8 +29,10 @@ public class Message {
 
     private String subject;
 
+    @Column(nullable = false)
     private String content;
 
     @CreationTimestamp
+    @Column(nullable = false)
     private LocalDateTime sendAt;
 }

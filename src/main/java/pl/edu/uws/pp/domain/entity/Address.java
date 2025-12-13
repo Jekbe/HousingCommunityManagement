@@ -9,18 +9,26 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Photo {
+public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String name;
+    @OneToOne(mappedBy = "address")
+    private Building building;
 
     @Column(nullable = false)
-    private String url;
+    private String street;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "failure_id", nullable = false)
-    private Failure failure;
+    @Column(nullable = false)
+    private String buildingNumber;
+
+    @Column(nullable = false)
+    private String postalCode;
+
+    @Column(nullable = false)
+    private String city;
+
+    @Column(nullable = false)
+    private String country;
 }

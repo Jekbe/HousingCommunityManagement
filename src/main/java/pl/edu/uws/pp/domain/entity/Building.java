@@ -17,10 +17,13 @@ public class Building {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String address;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "address_id", nullable = false, unique = true)
+    private Address address;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private User manager;
+    @JoinColumn(name = "manager_id", nullable = false)
+    private Manager manager;
 
     @OneToMany(mappedBy = "building", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Apartment> apartments = new ArrayList<>();
