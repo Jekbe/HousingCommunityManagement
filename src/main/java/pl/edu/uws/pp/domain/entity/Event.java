@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
 import pl.edu.uws.pp.domain.enums.EventStatus;
 
 import java.time.LocalDateTime;

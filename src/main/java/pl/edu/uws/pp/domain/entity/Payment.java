@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
-import pl.edu.uws.pp.domain.enums.PaymentStatus;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
