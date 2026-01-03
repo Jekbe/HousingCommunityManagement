@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.*;
 import pl.edu.uws.pp.domain.enums.Role;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -35,4 +38,13 @@ public class User {
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Resident residentProfile;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Notification> notifications = new ArrayList<>();
+
+    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Message> sendMessages = new ArrayList<>();
+
+    @OneToMany(mappedBy = "recipients", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Message> receivedMessages = new ArrayList<>();
 }

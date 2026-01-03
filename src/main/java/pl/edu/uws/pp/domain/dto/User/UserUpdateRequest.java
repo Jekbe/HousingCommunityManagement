@@ -1,6 +1,6 @@
 package pl.edu.uws.pp.domain.dto.User;
 
-public record ChangeUserInfoRequest(
+public record UserUpdateRequest(
         String name,
         String Surname,
         String email,

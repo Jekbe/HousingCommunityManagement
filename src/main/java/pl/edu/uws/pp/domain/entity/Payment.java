@@ -23,6 +23,10 @@ public class Payment {
     @JoinColumn(name = "invoice_id", nullable = false, unique = true)
     private Invoice invoice;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "resident_id", nullable = false)
+    private Resident resident;
+
     @Column(precision = 10, scale = 2, nullable = false)
     private BigDecimal amount;
 
