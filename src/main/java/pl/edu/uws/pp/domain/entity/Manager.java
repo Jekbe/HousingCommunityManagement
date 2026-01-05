@@ -33,4 +33,7 @@ public class Manager {
 
     @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<File> sendFiles = new ArrayList<>();
+
+    @OneToMany(mappedBy = "assignedTo", fetch = FetchType.LAZY)
+    private List<Complaint> managedComplaints = new ArrayList<>();
 }
