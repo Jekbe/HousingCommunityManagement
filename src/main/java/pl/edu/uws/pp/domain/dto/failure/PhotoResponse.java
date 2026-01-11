@@ -4,6 +4,7 @@ import lombok.Builder;
 
 @Builder
 public record PhotoResponse(
+        Long photoId,
         String name,
         String url
 ) {

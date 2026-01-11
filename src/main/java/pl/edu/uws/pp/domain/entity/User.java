@@ -47,4 +47,8 @@ public class User {
 
     @OneToMany(mappedBy = "recipients", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Message> receivedMessages = new ArrayList<>();
+
+    public boolean canSeePesel(User other){
+        return this.role.isHigher(other.role);
+    }
 }

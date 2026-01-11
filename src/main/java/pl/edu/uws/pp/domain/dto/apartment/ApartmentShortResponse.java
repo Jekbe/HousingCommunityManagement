@@ -5,6 +5,6 @@ import lombok.Builder;
 @Builder
 public record ApartmentShortResponse(
         Long id,
-        int number
+        String number
 ) {
 }

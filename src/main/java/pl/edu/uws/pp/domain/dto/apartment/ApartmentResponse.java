@@ -12,7 +12,7 @@ import java.util.List;
 public record ApartmentResponse(
         Long apartmentId,
         BuildingShortResponse building,
-        int number,
+        String number,
         List<UserShortResponse> residentsInfo,
         List<InvoiceShortResponse> invoices,
         List<FailureShortResponse> failures

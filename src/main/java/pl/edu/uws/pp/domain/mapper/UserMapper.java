@@ -1,9 +1,18 @@
 package pl.edu.uws.pp.domain.mapper;
 
 import pl.edu.uws.pp.domain.dto.User.*;
+import pl.edu.uws.pp.domain.dto.apartment.ApartmentShortResponse;
+import pl.edu.uws.pp.domain.dto.building.BuildingShortResponse;
+import pl.edu.uws.pp.domain.dto.complaint.ComplaintShortResponse;
+import pl.edu.uws.pp.domain.dto.failure.FailureShortResponse;
+import pl.edu.uws.pp.domain.dto.invoice.InvoiceShortResponse;
+import pl.edu.uws.pp.domain.dto.payment.PaymentShortResponse;
 import pl.edu.uws.pp.domain.entity.Manager;
 import pl.edu.uws.pp.domain.entity.Resident;
 import pl.edu.uws.pp.domain.entity.User;
+import pl.edu.uws.pp.domain.enums.Role;
+
+import java.util.List;
 
 public class UserMapper {
     private UserMapper() {}
@@ -43,59 +52,24 @@ public class UserMapper {
         return toUserShortResponse(manager.getUser());
     }
 
-    private static ManagerProfileResponse setManagerInfo(Manager manager) {
-        return ManagerProfileResponse.builder()
-                .userId(manager.getUser().getId())
-                .profileId(manager.getId())
-                .name(manager.getUser().getName())
-                .surname(manager.getUser().getSurname())
-                .pesel(manager.getUser().getPesel())
-                .email(manager.getUser().getEmail())
-                .role(manager.getUser().getRole())
-                .managedBuildings(manager.getManagedBuildings()
-                        .stream()
-                        .map(BuildingMapper::toBuildingShortResponse)
-                        .toList())
-                .assignedFailures(manager.getAssignedFailures()
-                        .stream()
-                        .map(FailureMapper::toFailureShortResponse)
-                        .toList())
-                .assignedComplaints(manager.getManagedComplaints()
-                        .stream()
-                        .map(ComplaintMapper::toComplaintShortResponse)
-                        .toList())
-                .build();
-    }
-
-    private static ResidentProfileResponse setResidentInfo(Resident resident) {
-        return ResidentProfileResponse.builder()
-                .userId(resident.getUser().getId())
-                .profileId(resident.getId())
-                .name(resident.getUser().getName())
-                .surname(resident.getUser().getSurname())
-                .pesel(resident.getUser().getPesel())
-                .email(resident.getUser().getEmail())
-                .role(resident.getUser().getRole())
-                .apartments(resident.getApartments()
-                        .stream()
-                        .map(ApartmentMapper::toApartmentShortResponse)
-                        .toList())
-                .failures(resident.getReportedFailures()
-                        .stream()
-                        .map(FailureMapper::toFailureShortResponse)
-                        .toList())
-                .invoices(resident.getInvoices()
-                        .stream()
-                        .map(InvoiceMapper::toInvoiceShortResponse)
-                        .toList())
-                .payments(resident.getPayments()
-                        .stream()
-                        .map(PaymentMapper::toPaymentShortResponse)
-                        .toList())
-                .complaints(resident.getComplaints()
-                        .stream()
-                        .map(ComplaintMapper::toComplaintShortResponse)
-                        .toList())
+    public static UserProfileResponse toUserProfileResponse(User viewer, User target, List<ApartmentShortResponse> apartments, List<FailureShortResponse> failures, List<InvoiceShortResponse> invoices, List<PaymentShortResponse> payments, List<ComplaintShortResponse> complaints, List<BuildingShortResponse> buildings){
+        return UserProfileResponse.builder()
+                .userId(target.getId())
+                .profileId(target.getRole() == Role.RESIDENT ? target.getResidentProfile().getId()
+                        : target.getRole() == Role.BUILDING_MANAGER ? target.getManagerProfile().getId()
+                        : null)
+                .name(target.getName())
+                .surname(target.getSurname())
+                .pesel(viewer.canSeePesel(target) ? target.getPesel()
+                        : null)
+                .email(target.getEmail())
+                .role(target.getRole())
+                .apartments(apartments)
+                .failures(failures)
+                .invoices(invoices)
+                .payments(payments)
+                .complaints(complaints)
+                .managedBuildings(buildings)
                 .build();
     }
 }

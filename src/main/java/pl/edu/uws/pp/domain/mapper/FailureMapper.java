@@ -45,6 +45,7 @@ public class FailureMapper {
 
     private static PhotoResponse toPhotoResponse(Photo photo) {
         return PhotoResponse.builder()
+                .photoId(photo.getId())
                 .name(photo.getName())
                 .url(photo.getUrl())
                 .build();

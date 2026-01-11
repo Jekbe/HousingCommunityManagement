@@ -20,6 +20,7 @@ public class MessageMapper {
     public static MessageShortResponse toMessageShortResponse(Message message) {
         return MessageShortResponse.builder()
                 .messageId(message.getId())
+                .sender(UserMapper.toUserShortResponse(message.getSender()))
                 .subject(message.getSubject())
                 .sendingTime(message.getSendAt())
                 .build();

@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 @Builder
 public record MessageShortResponse(
         Long messageId,
+        UserShortResponse sender,
         String subject,
         LocalDateTime sendingTime
 ) {

@@ -10,8 +10,8 @@ import java.time.LocalDateTime;
 public record EventResponse(
         Long eventId,
         BuildingShortResponse building,
-        String Title,
-        String Description,
+        String title,
+        String description,
         LocalDateTime eventTime,
         EventStatus status
 ) {

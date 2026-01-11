@@ -30,8 +30,8 @@ public class EventMapper {
         return EventResponse.builder()
                 .eventId(event.getId())
                 .building(BuildingMapper.toBuildingShortResponse(event.getBuilding()))
-                .Title(event.getTitle())
-                .Description(event.getDescription())
+                .title(event.getTitle())
+                .description(event.getDescription())
                 .eventTime(event.getEventTime())
                 .status(event.getStatus())
                 .build();

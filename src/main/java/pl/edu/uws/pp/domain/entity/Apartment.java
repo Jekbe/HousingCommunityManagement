@@ -22,7 +22,7 @@ public class Apartment {
     private Building building;
 
     @Column(nullable = false)
-    private int number;
+    private String number;
 
     @ManyToMany(mappedBy = "apartments", fetch = FetchType.LAZY)
     private List<Resident> residents = new ArrayList<>();
