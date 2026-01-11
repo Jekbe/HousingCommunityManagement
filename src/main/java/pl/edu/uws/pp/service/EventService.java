@@ -8,7 +8,7 @@ import pl.edu.uws.pp.domain.dto.event.EventChangeStatusRequest;
 public interface EventService {
     EventResponse createEvent(EventRequest request);
     EventResponse getEventInfo(Long id);
-    EventResponse editEvent(EventEditRequest request);
-    EventResponse changeEventStatus(EventChangeStatusRequest request);
+    EventResponse editEvent(Long id, EventEditRequest request);
+    EventResponse changeEventStatus(Long  id, EventChangeStatusRequest request);
     void deleteStatus(Long id);
 }

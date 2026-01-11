@@ -8,7 +8,7 @@ import pl.edu.uws.pp.domain.dto.invoice.InvoiceResponse;
 public interface InvoiceService {
     InvoiceResponse createInvoice(InvoiceRequest request);
     InvoiceResponse getInvoiceInfo(Long id);
-    InvoiceResponse editInvoice(InvoiceEditRequest request);
-    InvoiceResponse changeInvoiceStatus(InvoiceChangeStatusStatusRequest request);
+    InvoiceResponse editInvoice(Long id, InvoiceEditRequest request);
+    InvoiceResponse changeInvoiceStatus(Long id, InvoiceChangeStatusStatusRequest request);
     void deleteInvoice(Long id);
 }

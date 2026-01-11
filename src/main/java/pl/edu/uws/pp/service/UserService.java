@@ -8,8 +8,8 @@ public interface UserService {
     UserProfileResponse createUser(UserRequest request);
     List<UserShortResponse> getUsersList();
     UserProfileResponse getUserProfile(Long id);
-    UserProfileResponse editUser(UserEditRequest request);
-    UserProfileResponse addApartmentForUser(UserApartmentRequest request);
-    UserProfileResponse deleteApartmentForUser(UserApartmentRequest request);
+    UserProfileResponse editUser(Long id, UserEditRequest request);
+    UserProfileResponse addApartmentForUser(Long userId, Long apartmentId);
+    UserProfileResponse deleteApartmentForUser(Long userId, Long apartmentId);
     void deleteUser(Long id);
 }

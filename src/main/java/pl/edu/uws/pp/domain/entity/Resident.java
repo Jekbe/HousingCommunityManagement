@@ -28,12 +28,6 @@ public class Resident {
     @OneToMany(mappedBy = "reporting", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Failure> reportedFailures = new ArrayList<>();
 
-    @OneToMany(mappedBy = "apartment", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Invoice> invoices = new ArrayList<>();
-
-    @OneToMany(mappedBy = "recipient", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<File> receivedFiles = new ArrayList<>();
-
     @OneToMany(mappedBy = "resident", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Payment> payments = new ArrayList<>();
 

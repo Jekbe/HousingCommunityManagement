@@ -7,6 +7,6 @@ import pl.edu.uws.pp.domain.dto.apartment.ApartmentResponse;
 public interface ApartmentService {
     ApartmentResponse createApartment(ApartmentRequest request);
     ApartmentResponse getApartmentInfo(Long id);
-    ApartmentResponse editApartment(ApartmentEditRequest request);
+    ApartmentResponse editApartment(Long id, ApartmentEditRequest request);
     void deleteApartment(Long id);
 }

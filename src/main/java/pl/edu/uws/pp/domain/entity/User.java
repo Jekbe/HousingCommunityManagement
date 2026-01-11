@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Table(name = "app_user")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -47,6 +48,12 @@ public class User {
 
     @OneToMany(mappedBy = "recipients", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Message> receivedMessages = new ArrayList<>();
+
+    @OneToMany(mappedBy = "recipient", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<File> receivedFiles = new ArrayList<>();
+
+    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<File> sendFiles = new ArrayList<>();
 
     public boolean canSeePesel(User other){
         return this.role.isHigher(other.role);

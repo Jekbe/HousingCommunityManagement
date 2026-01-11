@@ -8,7 +8,7 @@ import pl.edu.uws.pp.domain.dto.complaint.ComplaintResponse;
 public interface ComplaintService {
     ComplaintResponse createComplaint(ComplaintRequest request);
     ComplaintResponse getComplaintInfo(Long id);
-    ComplaintResponse editComplaint(ComplaintEditRequest request);
-    ComplaintResponse changeComplaintStatus(ComplaintChangeStatusRequest request);
+    ComplaintResponse editComplaint(Long id, ComplaintEditRequest request);
+    ComplaintResponse changeComplaintStatus(Long id, ComplaintChangeStatusRequest request);
     void deleteComplaint(Long id);
 }
