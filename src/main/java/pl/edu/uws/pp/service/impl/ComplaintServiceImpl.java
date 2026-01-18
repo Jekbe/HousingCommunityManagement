@@ -20,12 +20,14 @@ public class ComplaintServiceImpl implements ComplaintService {
     }
 
     @Override
-    public ComplaintResponse editComplaint(Long id, ComplaintEditRequest request) {
+    public ComplaintResponse editComplaint(Long id,
+                                           ComplaintEditRequest request) {
         return null;
     }
 
     @Override
-    public ComplaintResponse changeComplaintStatus(Long id, ComplaintChangeStatusRequest request) {
+    public ComplaintResponse changeComplaintStatus(Long id,
+                                                   ComplaintChangeStatusRequest request) {
         return null;
     }
 

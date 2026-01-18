@@ -32,7 +32,8 @@ public class BuildingController {
     }
 
     @PutMapping("/{id}")
-    public BuildingResponse editBuilding(@PathVariable Long id, @RequestBody BuildingEditRequest request){
+    public BuildingResponse editBuilding(@PathVariable Long id,
+                                         @RequestBody BuildingEditRequest request){
         return buildingService.editBuilding(id, request);
     }
 

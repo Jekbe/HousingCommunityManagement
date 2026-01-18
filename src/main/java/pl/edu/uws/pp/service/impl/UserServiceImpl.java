@@ -24,17 +24,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserProfileResponse editUser(Long id, UserEditRequest request) {
+    public UserProfileResponse editUser(Long id,
+                                        UserEditRequest request) {
         return null;
     }
 
     @Override
-    public UserProfileResponse addApartmentForUser(Long userId, Long apartmentId) {
+    public UserProfileResponse addApartmentForUser(Long userId,
+                                                   Long apartmentId) {
         return null;
     }
 
     @Override
-    public UserProfileResponse deleteApartmentForUser(Long userId, Long apartmentId) {
+    public UserProfileResponse deleteApartmentForUser(Long userId,
+                                                      Long apartmentId) {
         return null;
     }
 

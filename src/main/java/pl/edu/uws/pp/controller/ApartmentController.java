@@ -24,7 +24,8 @@ public class ApartmentController {
     }
 
     @PutMapping("/{id}")
-    public ApartmentResponse editApartment(@PathVariable Long id, @RequestBody ApartmentEditRequest request){
+    public ApartmentResponse editApartment(@PathVariable Long id,
+                                           @RequestBody ApartmentEditRequest request){
         return apartmentService.editApartment(id, request);
     }
 

@@ -32,17 +32,20 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public UserProfileResponse editUser(@PathVariable Long id, @RequestBody UserEditRequest request){
+    public UserProfileResponse editUser(@PathVariable Long id,
+                                        @RequestBody UserEditRequest request){
         return userService.editUser(id, request);
     }
 
-    @PostMapping("/{userId}/{apartmentId}")
-    public UserProfileResponse AddApartmentForUser(@PathVariable Long userId, @PathVariable Long apartmentId){
+    @PostMapping("/{userId}/apartment/{apartmentId}")
+    public UserProfileResponse AddApartmentForUser(@PathVariable Long userId,
+                                                   @PathVariable Long apartmentId){
         return userService.addApartmentForUser(userId, apartmentId);
     }
 
-    @DeleteMapping("/{userId}/{apartmentId}")
-    public UserProfileResponse deleteApartmentForUser(@PathVariable Long userId, @PathVariable Long apartmentId){
+    @DeleteMapping("/{userId}/apartment/{apartmentId}")
+    public UserProfileResponse deleteApartmentForUser(@PathVariable Long userId,
+                                                      @PathVariable Long apartmentId){
         return userService.deleteApartmentForUser(userId, apartmentId);
     }
 

@@ -8,10 +8,11 @@ import pl.edu.uws.pp.domain.entity.User;
 public class FileMapper {
     private FileMapper() {}
 
-    public static File fromFileRequest(FileRequest request, User user) {
+    public static File fromFileRequest(FileRequest request, String url, User user) {
         return File.builder()
                 .name(request.name())
                 .fileType(request.type())
+                .fileUrl(url)
                 .recipient(user)
                 .build();
     }

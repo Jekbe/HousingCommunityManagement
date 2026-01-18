@@ -1,7 +1,7 @@
 package pl.edu.uws.pp.service.impl;
 
 import org.springframework.stereotype.Service;
-import pl.edu.uws.pp.domain.dto.invoice.InvoiceChangeStatusStatusRequest;
+import pl.edu.uws.pp.domain.dto.invoice.InvoiceChangeStatusRequest;
 import pl.edu.uws.pp.domain.dto.invoice.InvoiceEditRequest;
 import pl.edu.uws.pp.domain.dto.invoice.InvoiceRequest;
 import pl.edu.uws.pp.domain.dto.invoice.InvoiceResponse;
@@ -20,12 +20,14 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public InvoiceResponse editInvoice(Long id, InvoiceEditRequest request) {
+    public InvoiceResponse editInvoice(Long id,
+                                       InvoiceEditRequest request) {
         return null;
     }
 
     @Override
-    public InvoiceResponse changeInvoiceStatus(Long id, InvoiceChangeStatusStatusRequest request) {
+    public InvoiceResponse changeInvoiceStatus(Long id,
+                                               InvoiceChangeStatusRequest request) {
         return null;
     }
 

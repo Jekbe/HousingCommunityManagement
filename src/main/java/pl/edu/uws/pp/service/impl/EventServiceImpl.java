@@ -20,17 +20,19 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public EventResponse editEvent(Long id, EventEditRequest request) {
+    public EventResponse editEvent(Long id,
+                                   EventEditRequest request) {
         return null;
     }
 
     @Override
-    public EventResponse changeEventStatus(Long id, EventChangeStatusRequest request) {
+    public EventResponse changeEventStatus(Long id,
+                                           EventChangeStatusRequest request) {
         return null;
     }
 
     @Override
-    public void deleteStatus(Long id) {
+    public void deleteEvent(Long id) {
 
     }
 }
