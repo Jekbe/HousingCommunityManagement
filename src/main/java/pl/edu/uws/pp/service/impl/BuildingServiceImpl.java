@@ -2,6 +2,7 @@ package pl.edu.uws.pp.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.edu.uws.pp.domain.dto.building.BuildingEditRequest;
 import pl.edu.uws.pp.domain.dto.building.BuildingRequest;
 import pl.edu.uws.pp.domain.dto.building.BuildingResponse;
@@ -24,10 +25,10 @@ public class BuildingServiceImpl implements BuildingService {
 
     @Override
     public BuildingResponse createBuilding(BuildingRequest request) {
-        var address = BuildingMapper.fromBuildingRequestCreateAddress(request);
-        var savedAddress = addressRepository.save(address);
         var manager = managerRepository.findById(request.managerId())
                 .orElseThrow(() -> new NotFoundException("nie znaleziono managera"));
+        var address = BuildingMapper.fromBuildingRequestCreateAddress(request);
+        var savedAddress = addressRepository.save(address);
         var building = BuildingMapper.fromAddressAndManagerCreateBuilding(savedAddress, manager);
         var savedBuilding = buildingRepository.save(building);
 
@@ -36,22 +37,49 @@ public class BuildingServiceImpl implements BuildingService {
 
     @Override
     public List<BuildingShortResponse> getBuildingList() {
-        return List.of();
+        var buildingList = buildingRepository.findAll();
+
+        return buildingList.stream()
+                .map(BuildingMapper::toBuildingShortResponse)
+                .toList();
     }
 
     @Override
     public BuildingResponse getBuildingInfo(Long id) {
-        return null;
+        var building = buildingRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("nie znaleziono budynku"));
+
+        return BuildingMapper.toBuildingResponse(building);
     }
 
     @Override
+    @Transactional
     public BuildingResponse editBuilding(Long id,
                                          BuildingEditRequest request) {
-        return null;
+        var building = buildingRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("nie znaleziono budynku"));
+        var manager = managerRepository.findById(request.managerId())
+                        .orElseThrow(() -> new NotFoundException("Nie znaleziono managera"));
+
+        building.getAddress()
+                .setCountry(request.country());
+        building.getAddress()
+                .setPostalCode(request.postalCode());
+        building.getAddress()
+                .setCity(request.city());
+        building.getAddress()
+                .setStreet(request.street());
+        building.getAddress()
+                .setBuildingNumber(request.buildingNumber());
+        building.setManager(manager);
+
+        return BuildingMapper.toBuildingResponse(building);
     }
 
     @Override
     public void deleteBuilding(Long id) {
-
+        var building = buildingRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("nie znaleziono budynku"));
+        buildingRepository.delete(building);
     }
 }
