@@ -9,6 +9,7 @@ import java.util.List;
 public interface FileService {
     FileResponse uploadFile(FileRequest request, MultipartFile file);
     List<FileResponse> getUserFiles(Long id);
+    FileResponse editFileData(Long id, FileEditRequest request);
     Resource downloadFile(Long id);
     void deleteFile(Long id);
 }

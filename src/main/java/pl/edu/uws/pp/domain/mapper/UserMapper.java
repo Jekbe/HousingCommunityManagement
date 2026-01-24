@@ -52,7 +52,14 @@ public class UserMapper {
         return toUserShortResponse(manager.getUser());
     }
 
-    public static UserProfileResponse toUserProfileResponse(User viewer, User target, List<ApartmentShortResponse> apartments, List<FailureShortResponse> failures, List<InvoiceShortResponse> invoices, List<PaymentShortResponse> payments, List<ComplaintShortResponse> complaints, List<BuildingShortResponse> buildings){
+    public static UserProfileResponse toUserProfileResponse(User viewer,
+                                                            User target,
+                                                            List<ApartmentShortResponse> apartments,
+                                                            List<FailureShortResponse> failures,
+                                                            List<InvoiceShortResponse> invoices,
+                                                            List<PaymentShortResponse> payments,
+                                                            List<ComplaintShortResponse> complaints,
+                                                            List<BuildingShortResponse> buildings){
         return UserProfileResponse.builder()
                 .userId(target.getId())
                 .profileId(target.getRole() == Role.RESIDENT ? target.getResidentProfile().getId()

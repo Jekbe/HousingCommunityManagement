@@ -2,10 +2,7 @@ package pl.edu.uws.pp.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import pl.edu.uws.pp.domain.dto.building.BuildingEditRequest;
-import pl.edu.uws.pp.domain.dto.building.BuildingRequest;
-import pl.edu.uws.pp.domain.dto.building.BuildingResponse;
-import pl.edu.uws.pp.domain.dto.building.BuildingShortResponse;
+import pl.edu.uws.pp.domain.dto.building.*;
 import pl.edu.uws.pp.service.BuildingService;
 
 import java.util.List;
@@ -17,7 +14,7 @@ public class BuildingController {
     private final BuildingService buildingService;
 
     @PostMapping
-    public BuildingResponse createBuilding(@RequestBody BuildingRequest request){
+    public BuildingShortResponse createBuilding(@RequestBody BuildingRequest request){
         return buildingService.createBuilding(request);
     }
 
@@ -32,7 +29,7 @@ public class BuildingController {
     }
 
     @PutMapping("/{id}")
-    public BuildingResponse editBuilding(@PathVariable Long id,
+    public BuildingShortResponse editBuilding(@PathVariable Long id,
                                          @RequestBody BuildingEditRequest request){
         return buildingService.editBuilding(id, request);
     }

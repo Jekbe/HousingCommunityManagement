@@ -7,7 +7,7 @@ import pl.edu.uws.pp.domain.dto.payment.PaymentShortResponse;
 import java.util.List;
 
 public interface PaymentService {
-    PaymentResponse createPayment(PaymentRequest request);
+    PaymentShortResponse createPayment(PaymentRequest request);
     List<PaymentShortResponse> getPaymentsList();
     PaymentResponse getPaymentInfo(Long id);
 

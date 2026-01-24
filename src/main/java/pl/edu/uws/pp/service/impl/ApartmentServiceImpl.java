@@ -3,11 +3,7 @@ package pl.edu.uws.pp.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.edu.uws.pp.domain.dto.apartment.ApartmentEditRequest;
-import pl.edu.uws.pp.domain.dto.apartment.ApartmentRequest;
-import pl.edu.uws.pp.domain.dto.apartment.ApartmentResponse;
-import pl.edu.uws.pp.domain.entity.Apartment;
-import pl.edu.uws.pp.domain.entity.Building;
+import pl.edu.uws.pp.domain.dto.apartment.*;
 import pl.edu.uws.pp.domain.mapper.ApartmentMapper;
 import pl.edu.uws.pp.exception.NotFoundException;
 import pl.edu.uws.pp.repository.ApartmentRepository;
@@ -21,13 +17,13 @@ public class ApartmentServiceImpl implements ApartmentService {
     private final BuildingRepository buildingRepository;
 
     @Override
-    public ApartmentResponse createApartment(ApartmentRequest request) {
+    public ApartmentShortResponse createApartment(ApartmentRequest request) {
         var building = buildingRepository.findById(request.buildingId())
                 .orElseThrow(() -> new NotFoundException("Nie znaleziono budynku"));
         var apartment = ApartmentMapper.fromApartmentRequest(request, building);
         var saved = apartmentRepository.save(apartment);
 
-        return ApartmentMapper.toApartmentResponse(saved);
+        return ApartmentMapper.toApartmentShortResponse(saved);
     }
 
     @Override
@@ -40,13 +36,13 @@ public class ApartmentServiceImpl implements ApartmentService {
 
     @Override
     @Transactional
-    public ApartmentResponse editApartment(Long id,
+    public ApartmentShortResponse editApartment(Long id,
                                            ApartmentEditRequest request) {
         var apartment = apartmentRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Nie znaleziono mieszkania"));
         apartment.setNumber(request.number());
 
-        return ApartmentMapper.toApartmentResponse(apartment);
+        return ApartmentMapper.toApartmentShortResponse(apartment);
     }
 
     @Override

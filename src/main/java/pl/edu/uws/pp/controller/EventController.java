@@ -12,7 +12,7 @@ public class EventController {
     private final EventService eventService;
 
     @PutMapping
-    public EventResponse createEvent(@RequestBody EventRequest request){
+    public EventShortResponse createEvent(@RequestBody EventRequest request){
         return eventService.createEvent(request);
     }
 
@@ -22,13 +22,13 @@ public class EventController {
     }
 
     @PutMapping("/{id}")
-    public EventResponse editEvent(@PathVariable Long id,
+    public EventShortResponse editEvent(@PathVariable Long id,
                                    @RequestBody EventEditRequest request){
         return eventService.editEvent(id, request);
     }
 
     @PatchMapping("/{id}/status")
-    public EventResponse changeEventStatus(@PathVariable Long id,
+    public EventShortResponse changeEventStatus(@PathVariable Long id,
                                            @RequestBody EventChangeStatusRequest request){
         return eventService.changeEventStatus(id, request);
     }

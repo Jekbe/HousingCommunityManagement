@@ -7,8 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import pl.edu.uws.pp.domain.dto.file.FileRequest;
-import pl.edu.uws.pp.domain.dto.file.FileResponse;
+import pl.edu.uws.pp.domain.dto.file.*;
 import pl.edu.uws.pp.service.FileService;
 
 import java.util.List;
@@ -28,6 +27,11 @@ public class FileController {
     @GetMapping("/user/{id}")
     public List<FileResponse> filesList(@PathVariable Long id){
         return fileService.getUserFiles(id);
+    }
+
+    @PutMapping("/{id}")
+    public FileResponse editFile(@PathVariable Long id, @RequestBody FileEditRequest request){
+        return fileService.editFileData(id, request);
     }
 
     @GetMapping("/{id}/download")

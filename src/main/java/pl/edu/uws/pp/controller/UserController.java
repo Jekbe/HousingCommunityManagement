@@ -2,10 +2,7 @@ package pl.edu.uws.pp.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import pl.edu.uws.pp.domain.dto.User.UserEditRequest;
-import pl.edu.uws.pp.domain.dto.User.UserProfileResponse;
-import pl.edu.uws.pp.domain.dto.User.UserRequest;
-import pl.edu.uws.pp.domain.dto.User.UserShortResponse;
+import pl.edu.uws.pp.domain.dto.User.*;
 import pl.edu.uws.pp.service.UserService;
 
 import java.util.List;
@@ -17,7 +14,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public UserProfileResponse createUser(@RequestBody UserRequest request){
+    public UserShortResponse createUser(@RequestBody UserRequest request){
         return userService.createUser(request);
     }
 
@@ -32,19 +29,19 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public UserProfileResponse editUser(@PathVariable Long id,
+    public UserShortResponse editUser(@PathVariable Long id,
                                         @RequestBody UserEditRequest request){
         return userService.editUser(id, request);
     }
 
     @PostMapping("/{userId}/apartment/{apartmentId}")
-    public UserProfileResponse AddApartmentForUser(@PathVariable Long userId,
+    public UserShortResponse AddApartmentForUser(@PathVariable Long userId,
                                                    @PathVariable Long apartmentId){
         return userService.addApartmentForUser(userId, apartmentId);
     }
 
     @DeleteMapping("/{userId}/apartment/{apartmentId}")
-    public UserProfileResponse deleteApartmentForUser(@PathVariable Long userId,
+    public UserShortResponse deleteApartmentForUser(@PathVariable Long userId,
                                                       @PathVariable Long apartmentId){
         return userService.deleteApartmentForUser(userId, apartmentId);
     }

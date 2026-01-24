@@ -4,5 +4,13 @@ public enum EventStatus {
     PLANNED,
     CONFIRMED,
     CANCELLED,
-    ENDED
+    ENDED;
+
+    public boolean canChangeTo(EventStatus newStatus) {
+        return switch (this){
+            case PLANNED -> newStatus == CONFIRMED || newStatus == CANCELLED;
+            case CONFIRMED -> newStatus == CANCELLED || newStatus == ENDED;
+            case CANCELLED, ENDED -> false;
+        };
+    }
 }

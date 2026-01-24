@@ -5,11 +5,11 @@ import pl.edu.uws.pp.domain.dto.User.*;
 import java.util.List;
 
 public interface UserService {
-    UserProfileResponse createUser(UserRequest request);
+    UserShortResponse createUser(UserRequest request);
     List<UserShortResponse> getUsersList();
     UserProfileResponse getUserProfile(Long id);
-    UserProfileResponse editUser(Long id, UserEditRequest request);
-    UserProfileResponse addApartmentForUser(Long userId, Long apartmentId);
-    UserProfileResponse deleteApartmentForUser(Long userId, Long apartmentId);
+    UserShortResponse editUser(Long id, UserEditRequest request);
+    UserShortResponse addApartmentForUser(Long userId, Long apartmentId);
+    UserShortResponse deleteApartmentForUser(Long userId, Long apartmentId);
     void deleteUser(Long id);
 }

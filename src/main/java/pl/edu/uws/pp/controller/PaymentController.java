@@ -2,9 +2,7 @@ package pl.edu.uws.pp.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import pl.edu.uws.pp.domain.dto.payment.PaymentRequest;
-import pl.edu.uws.pp.domain.dto.payment.PaymentResponse;
-import pl.edu.uws.pp.domain.dto.payment.PaymentShortResponse;
+import pl.edu.uws.pp.domain.dto.payment.*;
 import pl.edu.uws.pp.service.PaymentService;
 
 import java.util.List;
@@ -16,7 +14,7 @@ public class PaymentController {
     private final PaymentService paymentService;
 
     @PostMapping
-    public PaymentResponse createPayment(@RequestBody PaymentRequest request){
+    public PaymentShortResponse createPayment(@RequestBody PaymentRequest request){
         return paymentService.createPayment(request);
     }
 

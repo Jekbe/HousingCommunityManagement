@@ -7,8 +7,8 @@ import pl.edu.uws.pp.domain.dto.message.MessageShortResponse;
 import java.util.List;
 
 public interface MessageService {
-    MessageResponse createMessage(MessageRequest request);
-    List<MessageShortResponse> getUserMessages();
+    MessageShortResponse createMessage(MessageRequest request);
+    List<MessageShortResponse> getUserMessages(Long userId);
     MessageResponse getMessageInfo(Long id);
     void deleteMessage(Long id);
 }

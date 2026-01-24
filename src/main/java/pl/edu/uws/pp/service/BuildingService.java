@@ -8,9 +8,9 @@ import pl.edu.uws.pp.domain.dto.building.BuildingShortResponse;
 import java.util.List;
 
 public interface BuildingService {
-    BuildingResponse createBuilding(BuildingRequest request);
+    BuildingShortResponse createBuilding(BuildingRequest request);
     List<BuildingShortResponse> getBuildingList();
     BuildingResponse getBuildingInfo(Long id);
-    BuildingResponse editBuilding(Long id, BuildingEditRequest request);
+    BuildingShortResponse editBuilding(Long id, BuildingEditRequest request);
     void deleteBuilding(Long id);
 }

@@ -3,10 +3,11 @@ package pl.edu.uws.pp.service;
 import pl.edu.uws.pp.domain.dto.apartment.ApartmentEditRequest;
 import pl.edu.uws.pp.domain.dto.apartment.ApartmentRequest;
 import pl.edu.uws.pp.domain.dto.apartment.ApartmentResponse;
+import pl.edu.uws.pp.domain.dto.apartment.ApartmentShortResponse;
 
 public interface ApartmentService {
-    ApartmentResponse createApartment(ApartmentRequest request);
+    ApartmentShortResponse createApartment(ApartmentRequest request);
     ApartmentResponse getApartmentInfo(Long id);
-    ApartmentResponse editApartment(Long id, ApartmentEditRequest request);
+    ApartmentShortResponse editApartment(Long id, ApartmentEditRequest request);
     void deleteApartment(Long id);
 }

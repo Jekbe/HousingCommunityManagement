@@ -4,5 +4,13 @@ public enum InvoiceStatus {
     NEW,
     PAID,
     EXPIRED,
-    CANCELLED
+    CANCELLED;
+
+    public boolean canChangeTo(InvoiceStatus newStatus) {
+        return switch (this){
+            case NEW -> newStatus == PAID || newStatus == EXPIRED || newStatus == CANCELLED;
+            case PAID, CANCELLED -> false;
+            case EXPIRED -> newStatus == PAID || newStatus == CANCELLED;
+        };
+    }
 }

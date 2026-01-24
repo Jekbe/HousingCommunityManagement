@@ -2,10 +2,7 @@ package pl.edu.uws.pp.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import pl.edu.uws.pp.domain.dto.invoice.InvoiceChangeStatusRequest;
-import pl.edu.uws.pp.domain.dto.invoice.InvoiceEditRequest;
-import pl.edu.uws.pp.domain.dto.invoice.InvoiceRequest;
-import pl.edu.uws.pp.domain.dto.invoice.InvoiceResponse;
+import pl.edu.uws.pp.domain.dto.invoice.*;
 import pl.edu.uws.pp.service.InvoiceService;
 
 @RestController
@@ -15,7 +12,7 @@ public class InvoiceController {
     private final InvoiceService invoiceService;
 
     @PostMapping
-    public InvoiceResponse createInvoice(@RequestBody InvoiceRequest request){
+    public InvoiceShortResponse createInvoice(@RequestBody InvoiceRequest request){
         return invoiceService.createInvoice(request);
     }
 
@@ -25,13 +22,13 @@ public class InvoiceController {
     }
 
     @PutMapping("/{id}")
-    public InvoiceResponse editInvoice(@PathVariable Long id,
+    public InvoiceShortResponse editInvoice(@PathVariable Long id,
                                        @RequestBody InvoiceEditRequest request){
         return invoiceService.editInvoice(id, request);
     }
 
     @PatchMapping("/{id}")
-    public InvoiceResponse changeInvoiceStatus(@PathVariable Long id,
+    public InvoiceShortResponse changeInvoiceStatus(@PathVariable Long id,
                                                @RequestBody InvoiceChangeStatusRequest request){
         return invoiceService.changeInvoiceStatus(id, request);
     }

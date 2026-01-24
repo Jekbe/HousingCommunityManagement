@@ -34,7 +34,7 @@ public class Failure {
 
     private String description;
 
-    @OneToMany(mappedBy = "failure", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "failure", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Photo> photos = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
