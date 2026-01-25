@@ -1,6 +1,7 @@
 package pl.edu.uws.pp.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +16,7 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
 
+    @PreAuthorize("permitAll()")
     @PostMapping("/login")
     public LoginResponse login(@RequestBody LoginRequest request) {
         var authentication = authenticationManager.authenticate(

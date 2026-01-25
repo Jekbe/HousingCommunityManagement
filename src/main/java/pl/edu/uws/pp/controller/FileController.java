@@ -5,6 +5,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import pl.edu.uws.pp.domain.dto.file.*;
@@ -18,22 +19,26 @@ import java.util.List;
 public class FileController {
     private final FileService fileService;
 
+    @PreAuthorize("hasAnyRole('HOUSING_MANAGER', 'BUILDING_MANAGER')")
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public FileResponse uploadFile(@RequestPart("data") FileRequest request,
                                    @RequestPart("file") MultipartFile file){
         return fileService.uploadFile(request, file);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/user/{id}")
     public List<FileResponse> filesList(@PathVariable Long id){
         return fileService.getUserFiles(id);
     }
 
+    @PreAuthorize("hasAnyRole('HOUSING_MANAGER', 'BUILDING_MANAGER')")
     @PutMapping("/{id}")
     public FileResponse editFile(@PathVariable Long id, @RequestBody FileEditRequest request){
         return fileService.editFileData(id, request);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/{id}/download")
     public ResponseEntity<Resource> downloadFile(@PathVariable Long id){
         var file = fileService.downloadFile(id);
@@ -45,6 +50,7 @@ public class FileController {
                 .body(file);
     }
 
+    @PreAuthorize("hasRole('HOUSING_MANAGER')")
     @DeleteMapping("/{id}")
     public void deleteFile(@PathVariable Long id){
         fileService.deleteFile(id);
