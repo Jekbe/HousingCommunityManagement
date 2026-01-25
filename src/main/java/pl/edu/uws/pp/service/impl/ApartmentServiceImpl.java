@@ -1,9 +1,12 @@
 package pl.edu.uws.pp.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pl.edu.uws.pp.config.security.UserPrincipal;
 import pl.edu.uws.pp.domain.dto.apartment.*;
+import pl.edu.uws.pp.domain.enums.Role;
 import pl.edu.uws.pp.domain.mapper.ApartmentMapper;
 import pl.edu.uws.pp.exception.NotFoundException;
 import pl.edu.uws.pp.repository.ApartmentRepository;
@@ -27,9 +30,25 @@ public class ApartmentServiceImpl implements ApartmentService {
     }
 
     @Override
-    public ApartmentResponse getApartmentInfo(Long id) {
+    public ApartmentResponse getApartmentInfo(Long id, UserPrincipal user) {
         var apartment = apartmentRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Nie znaleziono mieszkania"));
+
+        if (user.user()
+                    .getRole()
+                    .equals(Role.BUILDING_MANAGER)
+                && !user.user()
+                    .getManagerProfile()
+                    .getManagedBuildings()
+                    .contains(apartment.getBuilding()))
+            throw new AccessDeniedException("Nie masz dostępu do tego mieszkania");
+        if (user.user()
+                    .getRole().equals(Role.RESIDENT)
+                && !user.user()
+                    .getResidentProfile()
+                    .getApartments()
+                    .contains(apartment))
+            throw new AccessDeniedException("Nie masz dostępu do tego mieszkania");
 
         return ApartmentMapper.toApartmentResponse(apartment);
     }

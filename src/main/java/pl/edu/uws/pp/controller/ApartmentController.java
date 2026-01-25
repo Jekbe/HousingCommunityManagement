@@ -2,7 +2,9 @@ package pl.edu.uws.pp.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import pl.edu.uws.pp.config.security.UserPrincipal;
 import pl.edu.uws.pp.domain.dto.apartment.*;
 import pl.edu.uws.pp.service.ApartmentService;
 
@@ -12,7 +14,7 @@ import pl.edu.uws.pp.service.ApartmentService;
 public class ApartmentController {
     private final ApartmentService apartmentService;
 
-    @PreAuthorize("hasAnyRole('HOUSING_MANAGER', 'BUILDING_MANAGER')")
+    @PreAuthorize("hasRole('HOUSING_MANAGER')")
     @PostMapping
     public ApartmentShortResponse createApartment(@RequestBody ApartmentRequest request){
         return apartmentService.createApartment(request);
@@ -20,8 +22,8 @@ public class ApartmentController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/{id}")
-    public ApartmentResponse apartmentInfo(@PathVariable Long id){
-        return apartmentService.getApartmentInfo(id);
+    public ApartmentResponse apartmentInfo(@PathVariable Long id, @AuthenticationPrincipal UserPrincipal user){
+        return apartmentService.getApartmentInfo(id, user);
     }
 
     @PreAuthorize("hasRole('HOUSING_MANAGER')")
