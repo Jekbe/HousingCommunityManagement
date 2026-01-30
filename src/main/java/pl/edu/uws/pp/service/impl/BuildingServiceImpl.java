@@ -1,9 +1,13 @@
 package pl.edu.uws.pp.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pl.edu.uws.pp.config.security.UserPrincipal;
 import pl.edu.uws.pp.domain.dto.building.*;
+import pl.edu.uws.pp.domain.enums.Role;
+import pl.edu.uws.pp.domain.mapper.ApartmentMapper;
 import pl.edu.uws.pp.domain.mapper.BuildingMapper;
 import pl.edu.uws.pp.exception.NotFoundException;
 import pl.edu.uws.pp.repository.AddressRepository;
@@ -24,8 +28,10 @@ public class BuildingServiceImpl implements BuildingService {
     public BuildingShortResponse createBuilding(BuildingRequest request) {
         var manager = managerRepository.findById(request.managerId())
                 .orElseThrow(() -> new NotFoundException("nie znaleziono managera"));
+
         var address = BuildingMapper.fromBuildingRequestCreateAddress(request);
         var savedAddress = addressRepository.save(address);
+
         var building = BuildingMapper.fromAddressAndManagerCreateBuilding(savedAddress, manager);
         var savedBuilding = buildingRepository.save(building);
 
@@ -33,8 +39,13 @@ public class BuildingServiceImpl implements BuildingService {
     }
 
     @Override
-    public List<BuildingShortResponse> getBuildingList() {
+    public List<BuildingShortResponse> getBuildingList(UserPrincipal principal) {
         var buildingList = buildingRepository.findAll();
+
+        var user = principal.user();
+        if (user.isRoleEqualed(Role.BUILDING_MANAGER)){
+            buildingList = buildingRepository.findAllByManager(user.getManagerProfile());
+        }
 
         return buildingList.stream()
                 .map(BuildingMapper::toBuildingShortResponse)
@@ -42,11 +53,38 @@ public class BuildingServiceImpl implements BuildingService {
     }
 
     @Override
-    public BuildingResponse getBuildingInfo(Long id) {
+    public BuildingResponse getBuildingInfo(Long id,
+                                            UserPrincipal principal) {
         var building = buildingRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("nie znaleziono budynku"));
+        var apartmentsList = building.getApartments();
 
-        return BuildingMapper.toBuildingResponse(building);
+
+
+        var user =  principal.user();
+        if (user.isRoleEqualed(Role.BUILDING_MANAGER)
+            && ! user.getManagerProfile()
+                .getManagedBuildings()
+                .contains(building)) {
+            throw new AccessDeniedException("Brak dostępu do tego budynku");
+        }
+        if (user.isRoleEqualed(Role.RESIDENT)){
+            if (user.getResidentProfile().hasNotApartmentInBuilding(building)) {
+                throw new AccessDeniedException("Brak dostępu do tego budynku");
+            }
+
+            apartmentsList = apartmentsList.stream()
+                    .filter(apartment ->
+                            user.getResidentProfile()
+                                    .isOwningApartment(apartment))
+                    .toList();
+        }
+
+        var apartmentShortResponsesList = apartmentsList.stream()
+                .map(ApartmentMapper::toApartmentShortResponse)
+                .toList();
+
+        return BuildingMapper.toBuildingResponse(building, apartmentShortResponsesList);
     }
 
     @Override

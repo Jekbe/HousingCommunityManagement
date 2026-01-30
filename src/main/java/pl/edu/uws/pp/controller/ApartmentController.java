@@ -22,7 +22,8 @@ public class ApartmentController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/{id}")
-    public ApartmentResponse apartmentInfo(@PathVariable Long id, @AuthenticationPrincipal UserPrincipal user){
+    public ApartmentResponse apartmentInfo(@PathVariable Long id,
+                                           @AuthenticationPrincipal UserPrincipal user){
         return apartmentService.getApartmentInfo(id, user);
     }
 

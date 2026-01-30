@@ -5,6 +5,7 @@ import pl.edu.uws.pp.domain.dto.event.EventResponse;
 import pl.edu.uws.pp.domain.dto.event.EventShortResponse;
 import pl.edu.uws.pp.domain.entity.Building;
 import pl.edu.uws.pp.domain.entity.Event;
+import pl.edu.uws.pp.domain.enums.EventStatus;
 
 public class EventMapper {
     private EventMapper() {}
@@ -15,6 +16,7 @@ public class EventMapper {
                 .title(request.title())
                 .description(request.description())
                 .eventTime(request.eventTime())
+                .status(EventStatus.PLANNED)
                 .build();
     }
 

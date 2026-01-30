@@ -1,5 +1,6 @@
 package pl.edu.uws.pp.domain.mapper;
 
+import pl.edu.uws.pp.domain.dto.apartment.ApartmentShortResponse;
 import pl.edu.uws.pp.domain.dto.building.AddressResponse;
 import pl.edu.uws.pp.domain.dto.building.BuildingRequest;
 import pl.edu.uws.pp.domain.dto.building.BuildingResponse;
@@ -7,6 +8,8 @@ import pl.edu.uws.pp.domain.dto.building.BuildingShortResponse;
 import pl.edu.uws.pp.domain.entity.Address;
 import pl.edu.uws.pp.domain.entity.Building;
 import pl.edu.uws.pp.domain.entity.Manager;
+
+import java.util.List;
 
 public class BuildingMapper {
     private BuildingMapper() {}
@@ -35,15 +38,12 @@ public class BuildingMapper {
                 .build();
     }
 
-    public static BuildingResponse toBuildingResponse(Building building) {
+    public static BuildingResponse toBuildingResponse(Building building, List<ApartmentShortResponse>  apartments) {
         return BuildingResponse.builder()
                 .buildingId(building.getId())
                 .address(toAddressResponse(building.getAddress()))
                 .manager(UserMapper.toUserShortResponse(building.getManager()))
-                .apartmentsList(building.getApartments()
-                        .stream()
-                        .map(ApartmentMapper::toApartmentShortResponse)
-                        .toList())
+                .apartmentsList(apartments)
                 .eventList(building.getEvents()
                         .stream()
                         .map(EventMapper::toEventShortResponse)

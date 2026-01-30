@@ -1,12 +1,15 @@
 package pl.edu.uws.pp.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import pl.edu.uws.pp.config.security.UserPrincipal;
 import pl.edu.uws.pp.domain.dto.failure.*;
 import pl.edu.uws.pp.domain.entity.Failure;
 import pl.edu.uws.pp.domain.entity.Photo;
+import pl.edu.uws.pp.domain.enums.Role;
 import pl.edu.uws.pp.domain.mapper.FailureMapper;
 import pl.edu.uws.pp.exception.NotFoundException;
 import pl.edu.uws.pp.repository.ApartmentRepository;
@@ -29,10 +32,17 @@ public class FailureServiceImpl implements FailureService {
     @Override
     @Transactional
     public FailureShortResponse createFailure(FailureRequest request,
-                                              List<MultipartFile> photos) {
+                                              List<MultipartFile> photos,
+                                              UserPrincipal principal) {
         var apartment = apartmentRepository.findById(request.apartmentId())
                 .orElseThrow(() -> new NotFoundException("Nie znaleziono Mieszkania"));
-        var failure = FailureMapper.fromFailureRequest(request, apartment);
+
+        var user = principal.user();
+        if (! user.getResidentProfile().isOwningApartment(apartment)) {
+            throw new AccessDeniedException("Nie masz dostępu do tego mieszkania");
+        }
+
+        var failure = FailureMapper.fromFailureRequest(request, apartment, user.getResidentProfile());
         var savedFailure = failureRepository.save(failure);
 
         if (photos != null && !photos.isEmpty()) {
@@ -44,9 +54,20 @@ public class FailureServiceImpl implements FailureService {
     }
 
     @Override
-    public FailureResponse getFailureInfo(Long failureId) {
+    public FailureResponse getFailureInfo(Long failureId,
+                                          UserPrincipal principal) {
         var failure = failureRepository.findById(failureId)
                 .orElseThrow(() -> new NotFoundException("Nie znaleziono awarii"));
+
+        var user = principal.user();
+        if (user.isRoleEqualed(Role.BUILDING_MANAGER)
+            && user.getManagerProfile().isNotManagingApartment(failure.getApartment())) {
+            throw new AccessDeniedException("Nie masz dostępu do tej awarii");
+        }
+        if (user.isRoleEqualed(Role.RESIDENT)
+            && ! user.getResidentProfile().isOwningApartment(failure.getApartment())) {
+            throw new AccessDeniedException("Nie masz dostępu do tej awarii");
+        }
 
         return FailureMapper.toFailureResponse(failure);
     }
@@ -55,15 +76,23 @@ public class FailureServiceImpl implements FailureService {
     @Transactional
     public FailureShortResponse editFailure(Long id,
                                             FailureEditRequest request,
-                                            List<MultipartFile> photos) {
+                                            List<MultipartFile> photos,
+                                            UserPrincipal principal) {
         var failure = failureRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Nie znaleziono awarii"));
         var apartment = apartmentRepository.findById(request.apartmentId())
                         .orElseThrow(() -> new NotFoundException("Nie znaleziono mieszkania"));
 
+        var user = principal.user();
+        if (! failure.getReporting().equals(user.getResidentProfile())) {
+            throw new AccessDeniedException("Nie masz dostępu do tej awarii");
+        }
+        if (! user.getResidentProfile().isOwningApartment(apartment)) {
+            throw new AccessDeniedException("Nie możesz dodać awarii do nieswojego mieszkania");
+        }
+
         if (!failure.getApartment()
-                .getId()
-                .equals(apartment.getId()))
+                .equals(apartment))
             failure.setAssignedTo(apartment.getBuilding()
                     .getManager());
         failure.setApartment(apartment);
@@ -94,12 +123,18 @@ public class FailureServiceImpl implements FailureService {
     @Override
     @Transactional
     public FailureShortResponse changeFailureStatus(Long id,
-                                                    FailureChangeStatusRequest request) {
+                                                    FailureChangeStatusRequest request,
+                                                    UserPrincipal principal) {
         var failure = failureRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Nie znaleziono awarii"));
 
+        var user = principal.user();
+        if (! failure.getAssignedTo().equals(user.getManagerProfile())) {
+            throw new AccessDeniedException("Nie możesz zmienić statusu awarii którą nie zarządzasz");
+        }
+
         if (failure.getStatus().cantChangeTo(request.status()))
-            throw new IllegalStateException("Nie można zmienić status");
+            throw new IllegalStateException("Nie można zmienić statusu");
         failure.setStatus(request.status());
 
         return FailureMapper.toFailureShortResponse(failure);
@@ -117,7 +152,8 @@ public class FailureServiceImpl implements FailureService {
         failureRepository.delete(failure);
     }
 
-    private List<Photo> createPhotosList(List<MultipartFile> photos, Failure savedFailure) {
+    private List<Photo> createPhotosList(List<MultipartFile> photos,
+                                         Failure savedFailure) {
         List<Photo> photosEntities = new ArrayList<>();
         photos.forEach(file -> {
             var url = storageService.saveFile(file.getOriginalFilename(), file);

@@ -5,13 +5,15 @@ import pl.edu.uws.pp.domain.dto.payment.PaymentResponse;
 import pl.edu.uws.pp.domain.dto.payment.PaymentShortResponse;
 import pl.edu.uws.pp.domain.entity.Invoice;
 import pl.edu.uws.pp.domain.entity.Payment;
+import pl.edu.uws.pp.domain.entity.Resident;
 
 public class PaymentMapper {
     private PaymentMapper() {}
 
-    public static Payment fromPaymentRequest(PaymentRequest request, Invoice invoice) {
+    public static Payment fromPaymentRequest(PaymentRequest request, Invoice invoice, Resident resident) {
         return Payment.builder()
                 .invoice(invoice)
+                .resident(resident)
                 .amount(request.amount())
                 .transactionId(request.transactionId())
                 .build();

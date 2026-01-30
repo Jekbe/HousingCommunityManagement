@@ -2,7 +2,9 @@ package pl.edu.uws.pp.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import pl.edu.uws.pp.config.security.UserPrincipal;
 import pl.edu.uws.pp.domain.dto.User.*;
 import pl.edu.uws.pp.service.UserService;
 
@@ -22,35 +24,39 @@ public class UserController {
 
     @PreAuthorize("hasAnyRole('HOUSING_MANAGER', 'BUILDING_MANAGER')")
     @GetMapping
-    public List<UserShortResponse> usersList(){
+    public List<UserShortResponse> usersList(@AuthenticationPrincipal UserPrincipal user){
         return userService.getUsersList();
     }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/{id}")
-    public UserProfileResponse userInfo(@PathVariable Long id){
-        return userService.getUserProfile(id);
+    public UserProfileResponse userInfo(@PathVariable Long id,
+                                        @AuthenticationPrincipal UserPrincipal user){
+        return userService.getUserProfile(id, user);
     }
 
     @PreAuthorize("hasAnyRole('HOUSING_MANAGER', 'RESIDENT')")
     @PutMapping("/{id}")
     public UserShortResponse editUser(@PathVariable Long id,
-                                        @RequestBody UserEditRequest request){
-        return userService.editUser(id, request);
+                                      @RequestBody UserEditRequest request,
+                                      @AuthenticationPrincipal UserPrincipal user){
+        return userService.editUser(id, request, user);
     }
 
     @PreAuthorize("hasAnyRole('HOUSING_MANAGER', 'BUILDING_MANAGER')")
     @PostMapping("/{userId}/apartment/{apartmentId}")
     public UserShortResponse AddApartmentForUser(@PathVariable Long userId,
-                                                   @PathVariable Long apartmentId){
-        return userService.addApartmentForUser(userId, apartmentId);
+                                                   @PathVariable Long apartmentId,
+                                                 @AuthenticationPrincipal UserPrincipal user){
+        return userService.addApartmentForUser(userId, apartmentId, user);
     }
 
     @PreAuthorize("hasAnyRole('HOUSING_MANAGER', 'BUILDING_MANAGER')")
     @DeleteMapping("/{userId}/apartment/{apartmentId}")
     public UserShortResponse deleteApartmentForUser(@PathVariable Long userId,
-                                                      @PathVariable Long apartmentId){
-        return userService.deleteApartmentForUser(userId, apartmentId);
+                                                      @PathVariable Long apartmentId,
+                                                    @AuthenticationPrincipal UserPrincipal user){
+        return userService.deleteApartmentForUser(userId, apartmentId, user);
     }
 
     @PreAuthorize("hasRole('HOUSING_MANAGER')")

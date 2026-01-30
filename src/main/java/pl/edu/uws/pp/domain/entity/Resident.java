@@ -33,4 +33,25 @@ public class Resident {
 
     @OneToMany(mappedBy = "reporting", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Complaint> complaints = new ArrayList<>();
+
+    public boolean isOwningApartment(Apartment apartment){
+        return apartments.contains(apartment);
+    }
+
+    public boolean hasNotApartmentInBuilding(Building building){
+        return apartments.stream()
+                .noneMatch(apartment ->
+                        apartment.getBuilding()
+                                .equals(building)
+                );
+    }
+
+    public boolean hasApartmentManagedByManager(Manager manager){
+        return apartments.stream()
+                .anyMatch(apartment ->
+                        apartment.getBuilding()
+                                .getManager()
+                                .equals(manager)
+                );
+    }
 }

@@ -39,4 +39,8 @@ public class File {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "recipient_id", nullable = false)
     private User recipient;
+
+    public boolean isOwningFile(User user){
+        return sender.equals(user) || recipient.equals(user);
+    }
 }

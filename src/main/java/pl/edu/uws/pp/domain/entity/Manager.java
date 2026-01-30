@@ -30,4 +30,13 @@ public class Manager {
 
     @OneToMany(mappedBy = "assignedTo", fetch = FetchType.LAZY)
     private List<Complaint> managedComplaints = new ArrayList<>();
+
+    public boolean isNotManagingApartment(Apartment apartment) {
+        return this.getManagedBuildings()
+                .stream()
+                .noneMatch(building ->
+                        building.getApartments()
+                                .contains(apartment)
+                );
+    }
 }

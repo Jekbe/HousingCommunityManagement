@@ -1,9 +1,12 @@
 package pl.edu.uws.pp.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pl.edu.uws.pp.config.security.UserPrincipal;
 import pl.edu.uws.pp.domain.dto.event.*;
+import pl.edu.uws.pp.domain.enums.Role;
 import pl.edu.uws.pp.domain.mapper.EventMapper;
 import pl.edu.uws.pp.exception.NotFoundException;
 import pl.edu.uws.pp.repository.BuildingRepository;
@@ -27,10 +30,20 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public EventResponse getEventInfo(Long id) {
+    public EventResponse getEventInfo(Long id,
+                                      UserPrincipal principal) {
         var event = eventRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Nie znaleziono wydarzenia"));
 
+        var user = principal.user();
+        if (user.isRoleEqualed(Role.BUILDING_MANAGER)
+            && ! user.getManagerProfile().getManagedBuildings().contains(event.getBuilding())) {
+            throw new AccessDeniedException("Nie masz dostępu do tego wydarzenia");
+        }
+        if (user.isRoleEqualed(Role.RESIDENT)
+            && user.getResidentProfile().hasNotApartmentInBuilding(event.getBuilding())) {
+            throw new AccessDeniedException("Nie masz dostępu do tego wydarzenia");
+        }
 
         return EventMapper.toEventResponse(event);
     }

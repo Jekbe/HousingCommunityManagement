@@ -2,7 +2,9 @@ package pl.edu.uws.pp.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import pl.edu.uws.pp.config.security.UserPrincipal;
 import pl.edu.uws.pp.domain.dto.message.*;
 import pl.edu.uws.pp.service.MessageService;
 
@@ -16,25 +18,29 @@ public class MessageController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping
-    public MessageShortResponse sendMessage(@RequestBody MessageRequest request){
-        return messageService.createMessage(request);
+    public MessageShortResponse sendMessage(@RequestBody MessageRequest request,
+                                            @AuthenticationPrincipal UserPrincipal user) {
+        return messageService.createMessage(request, user);
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/user/{id}")
+    public List<MessageShortResponse> messagesList(@PathVariable Long id,
+                                                   @AuthenticationPrincipal UserPrincipal user) {
+        return messageService.getUserMessages(id, user);
     }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/{id}")
-    public List<MessageShortResponse> messagesList(@PathVariable Long id) {
-        return messageService.getUserMessages(id);
+    public MessageResponse MessageDetails(@PathVariable Long id,
+                                          @AuthenticationPrincipal UserPrincipal user) {
+        return messageService.getMessageInfo(id, user);
     }
 
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/{id}")
-    public MessageResponse MessageDetails(@PathVariable Long id){
-        return messageService.getMessageInfo(id);
-    }
-
-    @PreAuthorize("hasRole('HOUSING_MANAGER')")
     @DeleteMapping("/{id}")
-    public void deleteMessage(@PathVariable Long id){
-        messageService.deleteMessage(id);
+    public void deleteMessage(@PathVariable Long id,
+                              @AuthenticationPrincipal UserPrincipal user) {
+        messageService.deleteMessage(id, user);
     }
 }

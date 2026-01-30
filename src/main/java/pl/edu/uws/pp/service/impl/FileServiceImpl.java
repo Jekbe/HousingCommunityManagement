@@ -2,9 +2,11 @@ package pl.edu.uws.pp.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import pl.edu.uws.pp.config.security.UserPrincipal;
 import pl.edu.uws.pp.domain.dto.file.FileEditRequest;
 import pl.edu.uws.pp.domain.dto.file.FileRequest;
 import pl.edu.uws.pp.domain.dto.file.FileResponse;
@@ -29,23 +31,41 @@ public class FileServiceImpl implements FileService {
     @Override
     @Transactional
     public FileResponse uploadFile(FileRequest request,
-                                   MultipartFile file) {
-        var user = userRepository.findById(request.recipientId())
+                                   MultipartFile file,
+                                   UserPrincipal principal) {
+        var recipient = userRepository.findById(request.recipientId())
                 .orElseThrow(() -> new NotFoundException("Nie znaleziono użytkownika"));
+        var sender = principal.user();
+
         var url = storageService.saveFile(request.name(), file);
-        var fileEntity = FileMapper.fromFileRequest(request, url, user);
+        var fileEntity = FileMapper.fromFileRequest(request, url, recipient, sender);
         var savedFile = fileRepository.save(fileEntity);
 
         return FileMapper.toFileResponse(savedFile);
     }
 
     @Override
-    public List<FileResponse> getUserFiles(Long id) {
-        var user = userRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Nie znaleziono użytkownika"));
+    public List<FileResponse> getUserFiles(Long id,
+                                           UserPrincipal principal) {
         var fileList = new ArrayList<File>();
-        fileList.addAll(user.getReceivedFiles());
-        fileList.addAll(user.getSendFiles());
+
+        var loggedUser = principal.user();
+        if (loggedUser.getId().equals(id)) {
+            fileList.addAll(loggedUser.getReceivedFiles());
+            fileList.addAll(loggedUser.getSendFiles());
+        } else {
+            var user = userRepository.findById(id)
+                    .orElseThrow(() -> new NotFoundException("Nie znaleziono użytkownika"));
+
+            fileList.addAll(loggedUser.getReceivedFiles()
+                    .stream()
+                    .filter(file -> file.getSender().equals(user))
+                    .toList());
+            fileList.addAll(loggedUser.getSendFiles()
+                    .stream()
+                    .filter(file -> file.getRecipient().equals(user))
+                    .toList());
+        }
 
         return fileList.stream()
                 .map(FileMapper::toFileResponse)
@@ -55,11 +75,16 @@ public class FileServiceImpl implements FileService {
     @Override
     @Transactional
     public FileResponse editFileData(Long id,
-                                     FileEditRequest request) {
+                                     FileEditRequest request,
+                                     UserPrincipal principal) {
         var file =  fileRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Nie znaleziono pliku"));
         var user = userRepository.findById(request.recipientId())
                 .orElseThrow(() -> new NotFoundException("Nie znaleziono użytkownika"));
+        var loggedUser = principal.user();
+        if (! file.getSender().equals(loggedUser)) {
+            throw new AccessDeniedException("Nie jesteś właścicielem pliku");
+        }
 
         file.setName(request.name());
         file.setFileType(request.type());
@@ -69,17 +94,29 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public Resource downloadFile(Long id) {
+    public Resource downloadFile(Long id,
+                                 UserPrincipal principal) {
         var file = fileRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Nie znaleziono pliku"));
+        var user = principal.user();
+        if (! file.getRecipient().equals(user)
+                && ! file.getSender().equals(user)) {
+            throw new AccessDeniedException("Nie masz dostępu do tego pliku");
+        }
 
         return storageService.downloadFile(file.getFileUrl());
     }
 
     @Override
-    public void deleteFile(Long id) {
+    public void deleteFile(Long id,
+                           UserPrincipal principal) {
         var file = fileRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Nie znaleziono pliku"));
+        var user = principal.user();
+        if (! file.getSender().equals(user)) {
+            throw new AccessDeniedException("Nie jesteś właścicielem tego pliku");
+        }
+
         storageService.deleteFile(file.getFileUrl());
         fileRepository.delete(file);
     }

@@ -4,6 +4,7 @@ import pl.edu.uws.pp.domain.dto.User.*;
 import pl.edu.uws.pp.domain.dto.apartment.ApartmentShortResponse;
 import pl.edu.uws.pp.domain.dto.building.BuildingShortResponse;
 import pl.edu.uws.pp.domain.dto.complaint.ComplaintShortResponse;
+import pl.edu.uws.pp.domain.dto.event.EventShortResponse;
 import pl.edu.uws.pp.domain.dto.failure.FailureShortResponse;
 import pl.edu.uws.pp.domain.dto.invoice.InvoiceShortResponse;
 import pl.edu.uws.pp.domain.dto.payment.PaymentShortResponse;
@@ -59,7 +60,8 @@ public class UserMapper {
                                                             List<InvoiceShortResponse> invoices,
                                                             List<PaymentShortResponse> payments,
                                                             List<ComplaintShortResponse> complaints,
-                                                            List<BuildingShortResponse> buildings){
+                                                            List<BuildingShortResponse> buildings,
+                                                            List<EventShortResponse> events){
         return UserProfileResponse.builder()
                 .userId(target.getId())
                 .profileId(target.getRole() == Role.RESIDENT ? target.getResidentProfile().getId()
@@ -68,7 +70,7 @@ public class UserMapper {
                 .name(target.getName())
                 .surname(target.getSurname())
                 .pesel(viewer.canSeePesel(target) ? target.getPesel()
-                        : null)
+                        : "***********")
                 .email(target.getEmail())
                 .role(target.getRole())
                 .apartments(apartments)
@@ -77,6 +79,7 @@ public class UserMapper {
                 .payments(payments)
                 .complaints(complaints)
                 .managedBuildings(buildings)
+                .events(events)
                 .build();
     }
 }

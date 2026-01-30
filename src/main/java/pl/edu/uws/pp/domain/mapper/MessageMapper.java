@@ -9,9 +9,10 @@ import pl.edu.uws.pp.domain.entity.User;
 public class MessageMapper {
     private MessageMapper() {}
 
-    public static Message fromMessageRequest(MessageRequest request, User user) {
+    public static Message fromMessageRequest(MessageRequest request, User recipient, User sender) {
         return Message.builder()
-                .recipients(user)
+                .recipient(recipient)
+                .sender(sender)
                 .subject(request.subject())
                 .content(request.content())
                 .build();

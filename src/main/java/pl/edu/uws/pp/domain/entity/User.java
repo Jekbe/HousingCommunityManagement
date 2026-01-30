@@ -46,7 +46,7 @@ public class User {
     @OneToMany(mappedBy = "sender")
     private List<Message> sendMessages = new ArrayList<>();
 
-    @OneToMany(mappedBy = "recipients")
+    @OneToMany(mappedBy = "recipient")
     private List<Message> receivedMessages = new ArrayList<>();
 
     @OneToMany(mappedBy = "recipient")
@@ -56,6 +56,14 @@ public class User {
     private List<File> sendFiles = new ArrayList<>();
 
     public boolean canSeePesel(User other){
+        if (this.equals(other)){
+            return true;
+        }
+
         return this.role.isHigher(other.role);
+    }
+
+    public boolean isRoleEqualed(Role role){
+        return this.getRole().equals(role);
     }
 }

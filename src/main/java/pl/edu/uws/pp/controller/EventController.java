@@ -2,7 +2,9 @@ package pl.edu.uws.pp.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import pl.edu.uws.pp.config.security.UserPrincipal;
 import pl.edu.uws.pp.domain.dto.event.*;
 import pl.edu.uws.pp.service.EventService;
 
@@ -20,8 +22,9 @@ public class EventController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/{id}")
-    public EventResponse eventInfo(@PathVariable Long id){
-        return eventService.getEventInfo(id);
+    public EventResponse eventInfo(@PathVariable Long id,
+                                   @AuthenticationPrincipal UserPrincipal user){
+        return eventService.getEventInfo(id, user);
     }
 
     @PreAuthorize("hasRole('HOUSING_MANAGER')")

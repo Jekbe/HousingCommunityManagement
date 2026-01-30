@@ -23,32 +23,28 @@ public class ApartmentServiceImpl implements ApartmentService {
     public ApartmentShortResponse createApartment(ApartmentRequest request) {
         var building = buildingRepository.findById(request.buildingId())
                 .orElseThrow(() -> new NotFoundException("Nie znaleziono budynku"));
-        var apartment = ApartmentMapper.fromApartmentRequest(request, building);
-        var saved = apartmentRepository.save(apartment);
 
-        return ApartmentMapper.toApartmentShortResponse(saved);
+        var apartment = ApartmentMapper.fromApartmentRequest(request, building);
+        var savedApartment = apartmentRepository.save(apartment);
+
+        return ApartmentMapper.toApartmentShortResponse(savedApartment);
     }
 
     @Override
-    public ApartmentResponse getApartmentInfo(Long id, UserPrincipal user) {
+    public ApartmentResponse getApartmentInfo(Long id,
+                                              UserPrincipal principal) {
         var apartment = apartmentRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Nie znaleziono mieszkania"));
 
-        if (user.user()
-                    .getRole()
-                    .equals(Role.BUILDING_MANAGER)
-                && !user.user()
-                    .getManagerProfile()
-                    .getManagedBuildings()
-                    .contains(apartment.getBuilding()))
+        var user = principal.user();
+        if (user.isRoleEqualed(Role.BUILDING_MANAGER)
+                && user.getManagerProfile().isNotManagingApartment(apartment)) {
             throw new AccessDeniedException("Nie masz dostępu do tego mieszkania");
-        if (user.user()
-                    .getRole().equals(Role.RESIDENT)
-                && !user.user()
-                    .getResidentProfile()
-                    .getApartments()
-                    .contains(apartment))
+        }
+        if (user.isRoleEqualed(Role.RESIDENT)
+                && ! principal.user().getResidentProfile().isOwningApartment(apartment)) {
             throw new AccessDeniedException("Nie masz dostępu do tego mieszkania");
+        }
 
         return ApartmentMapper.toApartmentResponse(apartment);
     }
@@ -56,9 +52,10 @@ public class ApartmentServiceImpl implements ApartmentService {
     @Override
     @Transactional
     public ApartmentShortResponse editApartment(Long id,
-                                           ApartmentEditRequest request) {
+                                                ApartmentEditRequest request) {
         var apartment = apartmentRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Nie znaleziono mieszkania"));
+
         apartment.setNumber(request.number());
 
         return ApartmentMapper.toApartmentShortResponse(apartment);
@@ -67,7 +64,8 @@ public class ApartmentServiceImpl implements ApartmentService {
     @Override
     public void deleteApartment(Long id) {
         var apartment = apartmentRepository.findById(id)
-                        .orElseThrow(() -> new NotFoundException("Nie znaleziiono mieszkania"));
+                        .orElseThrow(() -> new NotFoundException("Nie znaleziono mieszkania"));
+
         apartmentRepository.delete(apartment);
     }
 }

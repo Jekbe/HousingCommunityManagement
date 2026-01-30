@@ -13,6 +13,7 @@ public record FileResponse(
         FileType type,
         LocalDateTime uploadTime,
         String url,
-        UserShortResponse sender
+        UserShortResponse sender,
+        UserShortResponse recipient
 ) {
 }

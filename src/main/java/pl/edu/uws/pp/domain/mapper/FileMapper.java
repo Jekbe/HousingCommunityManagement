@@ -8,12 +8,13 @@ import pl.edu.uws.pp.domain.entity.User;
 public class FileMapper {
     private FileMapper() {}
 
-    public static File fromFileRequest(FileRequest request, String url, User user) {
+    public static File fromFileRequest(FileRequest request, String url, User recipient, User sender) {
         return File.builder()
                 .name(request.name())
                 .fileType(request.type())
                 .fileUrl(url)
-                .recipient(user)
+                .sender(sender)
+                .recipient(recipient)
                 .build();
     }
 
@@ -25,6 +26,7 @@ public class FileMapper {
                 .uploadTime(file.getUploadTime())
                 .url(file.getFileUrl())
                 .sender(UserMapper.toUserShortResponse(file.getSender()))
+                .recipient(UserMapper.toUserShortResponse(file.getRecipient()))
                 .build();
     }
 }

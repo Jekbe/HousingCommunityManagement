@@ -7,16 +7,17 @@ import pl.edu.uws.pp.domain.dto.failure.PhotoResponse;
 import pl.edu.uws.pp.domain.entity.Apartment;
 import pl.edu.uws.pp.domain.entity.Failure;
 import pl.edu.uws.pp.domain.entity.Photo;
+import pl.edu.uws.pp.domain.entity.Resident;
 import pl.edu.uws.pp.domain.enums.FailureStatus;
 
 public class FailureMapper {
     private FailureMapper() {}
 
-    public static Failure fromFailureRequest(FailureRequest request, Apartment apartment) {
+    public static Failure fromFailureRequest(FailureRequest request, Apartment apartment, Resident resident) {
         return Failure.builder()
                 .apartment(apartment)
                 .description(request.description())
-                //.reporting()
+                .reporting(resident)
                 .assignedTo(apartment.getBuilding().getManager())
                 .status(FailureStatus.NEW)
                 .build();

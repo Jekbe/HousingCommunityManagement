@@ -1,6 +1,7 @@
 package pl.edu.uws.pp.bootstrap;
 
 import lombok.RequiredArgsConstructor;
+import org.jspecify.annotations.NonNull;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,9 +19,10 @@ public class DataInitializer implements ApplicationRunner {
 
     @Override
     @Transactional
-    public void run(ApplicationArguments args) throws Exception {
-        if (userRepository.existsByRole(Role.HOUSING_MANAGER))
+    public void run(@NonNull ApplicationArguments args){
+        if (userRepository.existsByRole(Role.HOUSING_MANAGER)) {
             return;
+        }
 
         User user = User.builder()
                 .name("Patryk")
