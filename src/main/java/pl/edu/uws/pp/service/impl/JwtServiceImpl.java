@@ -12,7 +12,7 @@ import java.util.Date;
 
 @Service
 public class JwtServiceImpl implements JwtService {
-    private final String SECRET = "SUPER_SECRET_KEY_256_BITS";
+    private final String SECRET = "SUPER_SECRET_KEY_256_BITS_1234567890ABC";
 
     @Override
     public String generateToken(User user) {

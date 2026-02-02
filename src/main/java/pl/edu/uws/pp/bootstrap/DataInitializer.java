@@ -31,6 +31,7 @@ public class DataInitializer implements ApplicationRunner {
                 .email("patrykrusakowicz@housing.local")
                 .password(passwordEncoder.encode("admin123"))
                 .role(Role.HOUSING_MANAGER)
+                .enabled(true)
                 .build();
         userRepository.save(user);
     }

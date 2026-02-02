@@ -14,7 +14,7 @@ public record UserPrincipal(User user) implements UserDetails {
     @Override
     public @NullMarked Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(
-                new SimpleGrantedAuthority("Role_" + user.getRole().name())
+                new SimpleGrantedAuthority("ROLE_" + user.getRole().name())
         );
     }
 

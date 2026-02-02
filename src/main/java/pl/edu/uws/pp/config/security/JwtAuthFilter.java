@@ -19,29 +19,40 @@ import java.io.IOException;
 @Component
 @RequiredArgsConstructor
 public class JwtAuthFilter extends OncePerRequestFilter {
+
     private final JwtService jwtService;
     private final UserRepository userRepository;
-
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain)
             throws ServletException, IOException {
-        var header = request.getHeader("Authorization");
-        if (header == null || !header.startsWith("Bearer ")){
+
+        String path = request.getServletPath();
+        if (path.startsWith("/auth/") || path.startsWith("/swagger-ui/") || path.startsWith("/v3/api-docs/")) {
+            // publiczne endpointy → przepuszczamy
             filterChain.doFilter(request, response);
             return;
         }
 
-        var token = header.substring(7);
-        var userId = jwtService.extractUserId(token);
-        var user = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("Nie znaleziono użytkownika"));
-        var principal = new UserPrincipal(user);
-        var auth = new UsernamePasswordAuthenticationToken(principal, null, principal.getAuthorities());
+        String header = request.getHeader("Authorization");
+        if (header != null && header.startsWith("Bearer ")) {
+            try {
+                String token = header.substring(7);
+                Long userId = jwtService.extractUserId(token);
 
-        SecurityContextHolder.getContext().setAuthentication(auth);
+                userRepository.findById(userId).ifPresent(user -> {
+                    var principal = new UserPrincipal(user);
+                    var auth = new UsernamePasswordAuthenticationToken(principal, null, principal.getAuthorities());
+                    SecurityContextHolder.getContext().setAuthentication(auth);
+                });
+
+            } catch (Exception e) {
+                // ignorujemy błędne tokeny, nie blokujemy requestu
+            }
+        }
+
         filterChain.doFilter(request, response);
     }
 }

@@ -34,6 +34,8 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public UserShortResponse createUser(UserRequest request) {
         var user = UserMapper.fromUserRequest(request);
+        var savedUser = userRepository.save(user);
+
         switch (user.getRole()) {
             case RESIDENT -> {
                 var resident = Resident.builder()
@@ -49,9 +51,6 @@ public class UserServiceImpl implements UserService {
             }
             default -> throw new IllegalStateException("Problem z rolą");
         }
-
-        var savedUser = userRepository.save(user);
-
 
         return UserMapper.toUserShortResponse(savedUser);
     }

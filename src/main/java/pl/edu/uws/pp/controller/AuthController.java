@@ -28,6 +28,6 @@ public class AuthController {
             throw new IllegalStateException("Błąd podczas logowania");
         var token = jwtService.generateToken(principal.user());
 
-        return new LoginResponse(token);
+        return new LoginResponse(token, principal.user().getId(), principal.user().getRole());
     }
 }
