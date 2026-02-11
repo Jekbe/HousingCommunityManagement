@@ -8,7 +8,6 @@ import pl.edu.uws.pp.domain.dto.event.EventShortResponse;
 import pl.edu.uws.pp.domain.dto.failure.FailureShortResponse;
 import pl.edu.uws.pp.domain.dto.invoice.InvoiceShortResponse;
 import pl.edu.uws.pp.domain.dto.payment.PaymentShortResponse;
-import pl.edu.uws.pp.domain.entity.Event;
 import pl.edu.uws.pp.domain.enums.Role;
 
 import java.util.List;
