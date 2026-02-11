@@ -22,7 +22,8 @@ public class PaymentMapper {
     public static PaymentShortResponse toPaymentShortResponse(Payment payment) {
         return PaymentShortResponse.builder()
                 .paymentId(payment.getId())
-                .transactionId(payment.getTransactionId())
+                .amount(payment.getAmount())
+                .paymentTime(payment.getPaidAt())
                 .build();
     }
 

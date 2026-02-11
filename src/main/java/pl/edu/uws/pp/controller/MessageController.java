@@ -11,7 +11,7 @@ import pl.edu.uws.pp.service.MessageService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/message")
+@RequestMapping("/messages")
 @RequiredArgsConstructor
 public class MessageController {
     private final MessageService messageService;

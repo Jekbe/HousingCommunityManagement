@@ -9,7 +9,7 @@ import pl.edu.uws.pp.domain.dto.complaint.*;
 import pl.edu.uws.pp.service.ComplaintService;
 
 @RestController
-@RequestMapping("/complaint")
+@RequestMapping("/complaints")
 @RequiredArgsConstructor
 public class ComplaintController {
     private final ComplaintService complaintService;

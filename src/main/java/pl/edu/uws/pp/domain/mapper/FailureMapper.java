@@ -52,7 +52,6 @@ public class FailureMapper {
         return PhotoResponse.builder()
                 .photoId(photo.getId())
                 .name(photo.getName())
-                .url(photo.getUrl())
                 .build();
     }
 }

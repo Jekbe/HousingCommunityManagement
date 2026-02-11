@@ -9,7 +9,7 @@ import pl.edu.uws.pp.domain.dto.event.*;
 import pl.edu.uws.pp.service.EventService;
 
 @RestController
-@RequestMapping("/event")
+@RequestMapping("/events")
 @RequiredArgsConstructor
 public class EventController {
     private final EventService eventService;

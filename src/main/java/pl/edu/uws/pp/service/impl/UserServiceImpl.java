@@ -56,8 +56,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserShortResponse> getUsersList() {
-        var users = userRepository.findAll();
+    public List<UserShortResponse> getUsersList(UserPrincipal principal) {
+        var user = principal.user();
+        List<User> users = user.getRole() == Role.BUILDING_MANAGER ?
+                userRepository.findDistinctByResidentProfile_Apartments_Building_Manager(user.getManagerProfile())
+                : userRepository.findAll();
 
         return users.stream()
                 .map(UserMapper::toUserShortResponse)
@@ -78,21 +81,17 @@ public class UserServiceImpl implements UserService {
         List<Building> buildings = new ArrayList<>();
         List<Event> events = new ArrayList<>();
 
-        if (viewer.equals(target)) {
+        if (viewer.getId().equals(target.getId())) {
             if (viewer.isRoleEqualed(Role.HOUSING_MANAGER)){
-                apartments = apartmentRepository.findAll();
                 failures = failureRepository.findAll();
                 invoices = invoiceRepository.findAll();
                 payments = paymentRepository.findAll();
                 complaints = complaintRepository.findAll();
-                buildings = buildingRepository.findAll();
                 events = eventRepository.findAll();
             } else if (viewer.isRoleEqualed(Role.BUILDING_MANAGER)){
                 var manager = viewer.getManagerProfile();
-                apartments = apartmentRepository.findAllByBuildingIn(manager.getManagedBuildings());
                 failures = failureRepository.findAllByAssignedTo(manager);
                 invoices = invoiceRepository.findAllByApartment_Building_Manager(manager);
-                payments = paymentRepository.findAllByInvoice_Apartment_Building_Manager(manager);
                 complaints = complaintRepository.findAllByAssignedTo(manager);
                 buildings = buildingRepository.findAllByManager(manager);
                 events = eventRepository.findAllByBuilding_Manager(manager);
@@ -108,6 +107,9 @@ public class UserServiceImpl implements UserService {
         } else if (viewer.isRoleEqualed(Role.RESIDENT)){
             if (target.isRoleEqualed(Role.RESIDENT)){
                 apartments = apartmentRepository.findAllByResidentsContainingAndResidentsContaining(viewer.getResidentProfile(), target.getResidentProfile());
+                if (apartments.isEmpty()){
+                    throw new AccessDeniedException("Nie możesz zobaczyć tego profilu");
+                }
             } else if (target.isRoleEqualed(Role.BUILDING_MANAGER)){
                 apartments = apartmentRepository.findAllByResidentsContainingAndBuilding_Manager(viewer.getResidentProfile(), target.getManagerProfile());
                 failures = failureRepository.findAllByReportingAndAssignedTo(viewer.getResidentProfile(), target.getManagerProfile());
@@ -130,7 +132,6 @@ public class UserServiceImpl implements UserService {
                 complaints = complaintRepository.findAllByReporting(resident);
             } else if (target.isRoleEqualed(Role.BUILDING_MANAGER)){
                 var manager = target.getManagerProfile();
-                apartments = apartmentRepository.findAllByBuildingIn(manager.getManagedBuildings());
                 failures = failureRepository.findAllByAssignedTo(manager);
                 complaints = complaintRepository.findAllByAssignedTo(manager);
                 buildings = buildingRepository.findAllByManager(manager);

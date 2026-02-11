@@ -11,7 +11,7 @@ import pl.edu.uws.pp.service.UserService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/User")
+@RequestMapping("/users")
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
@@ -25,7 +25,7 @@ public class UserController {
     @PreAuthorize("hasAnyRole('HOUSING_MANAGER', 'BUILDING_MANAGER')")
     @GetMapping
     public List<UserShortResponse> usersList(@AuthenticationPrincipal UserPrincipal user){
-        return userService.getUsersList();
+        return userService.getUsersList(user);
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -44,7 +44,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasAnyRole('HOUSING_MANAGER', 'BUILDING_MANAGER')")
-    @PostMapping("/{userId}/apartment/{apartmentId}")
+    @PostMapping("/{userId}/apartments/{apartmentId}")
     public UserShortResponse AddApartmentForUser(@PathVariable Long userId,
                                                    @PathVariable Long apartmentId,
                                                  @AuthenticationPrincipal UserPrincipal user){
@@ -52,7 +52,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasAnyRole('HOUSING_MANAGER', 'BUILDING_MANAGER')")
-    @DeleteMapping("/{userId}/apartment/{apartmentId}")
+    @DeleteMapping("/{userId}/apartments/{apartmentId}")
     public UserShortResponse deleteApartmentForUser(@PathVariable Long userId,
                                                       @PathVariable Long apartmentId,
                                                     @AuthenticationPrincipal UserPrincipal user){

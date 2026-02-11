@@ -28,13 +28,6 @@ public class UserMapper {
                 .build();
     }
 
-    public static void fromUserUpdateRequest(User user, UserUpdateRequest request) {
-        user.setName(request.name());
-        user.setSurname(request.Surname());
-        user.setEmail(request.email());
-        user.setPassword(request.Password());
-    }
-
     public static UserShortResponse toUserShortResponse(User user){
         return UserShortResponse.builder()
                 .UserId(user.getId())

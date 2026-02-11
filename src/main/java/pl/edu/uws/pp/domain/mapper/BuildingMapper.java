@@ -56,7 +56,7 @@ public class BuildingMapper {
                 .country(address.getCountry())
                 .city(address.getCity())
                 .postalCode(address.getPostalCode())
-                .Street(address.getStreet())
+                .street(address.getStreet())
                 .buildingNumber(address.getBuildingNumber())
                 .build();
     }

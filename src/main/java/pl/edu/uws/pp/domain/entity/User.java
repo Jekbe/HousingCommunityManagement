@@ -56,7 +56,7 @@ public class User {
     private List<File> sendFiles = new ArrayList<>();
 
     public boolean canSeePesel(User other){
-        if (this.equals(other)){
+        if (this.id.equals(other.id)){
             return true;
         }
 

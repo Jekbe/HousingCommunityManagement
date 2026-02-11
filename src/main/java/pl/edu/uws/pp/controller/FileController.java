@@ -16,7 +16,7 @@ import pl.edu.uws.pp.service.FileService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/file")
+@RequestMapping("/files")
 @RequiredArgsConstructor
 public class FileController {
     private final FileService fileService;

@@ -9,7 +9,7 @@ import pl.edu.uws.pp.domain.dto.invoice.*;
 import pl.edu.uws.pp.service.InvoiceService;
 
 @RestController
-@RequestMapping("/invoice")
+@RequestMapping("/invoices")
 @RequiredArgsConstructor
 public class InvoiceController {
     private final InvoiceService invoiceService;

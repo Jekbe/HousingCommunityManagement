@@ -7,7 +7,7 @@ public record AddressResponse(
         String country,
         String city,
         String postalCode,
-        String Street,
+        String street,
         String buildingNumber
 ) {
 }

@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface UserService {
     UserShortResponse createUser(UserRequest request);
-    List<UserShortResponse> getUsersList();
+    List<UserShortResponse> getUsersList(UserPrincipal principal);
     UserProfileResponse getUserProfile(Long id, UserPrincipal principal);
     UserShortResponse editUser(Long id, UserEditRequest request, UserPrincipal principal);
     UserShortResponse addApartmentForUser(Long userId, Long apartmentId, UserPrincipal principal);

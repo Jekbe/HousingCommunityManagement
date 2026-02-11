@@ -9,10 +9,9 @@ import java.time.LocalDateTime;
 @Builder
 public record FileResponse(
         Long fileId,
-        String Name,
+        String name,
         FileType type,
         LocalDateTime uploadTime,
-        String url,
         UserShortResponse sender,
         UserShortResponse recipient
 ) {

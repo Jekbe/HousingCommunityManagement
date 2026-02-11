@@ -1,7 +1,9 @@
 package pl.edu.uws.pp.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +15,7 @@ import pl.edu.uws.pp.service.FailureService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/failure")
+@RequestMapping("/failures")
 @RequiredArgsConstructor
 public class FailureController {
     private final FailureService failureService;
@@ -54,5 +56,15 @@ public class FailureController {
     @DeleteMapping("/{id}")
     public void deleteFailure(@PathVariable Long id){
         failureService.deleteFailure(id);
+    }
+
+    @PreAuthorize("permitAll()")
+    @GetMapping("/{failureId}/photo/{id}")
+    public ResponseEntity<Resource> getFailurePhoto(@PathVariable Long failureId,
+                                    @PathVariable Long id,
+                                    @AuthenticationPrincipal UserPrincipal user) {
+        var photo = failureService.getPhoto(failureId, id, user);
+
+        return ResponseEntity.ok(photo);
     }
 }

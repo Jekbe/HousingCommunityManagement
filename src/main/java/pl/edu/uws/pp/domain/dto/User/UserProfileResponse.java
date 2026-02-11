@@ -29,5 +29,6 @@ public record UserProfileResponse(
         List<ComplaintShortResponse> complaints,
         List<BuildingShortResponse> managedBuildings,
         List<EventShortResponse> events
-) {}
+) {
+}
 

@@ -19,3 +19,7 @@ spring:
 logging:
   level:
     org.springframework.security: TRACE
+    org.springframework.web.cors: DEBUG
+    org.springframework.web.filter.CorsFilter: DEBUG
+    org.springframework.web.servlet.DispatcherServlet: DEBUG
+    org.springframework.web: DEBUG

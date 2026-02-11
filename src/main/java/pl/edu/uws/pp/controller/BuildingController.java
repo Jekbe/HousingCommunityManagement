@@ -11,7 +11,7 @@ import pl.edu.uws.pp.service.BuildingService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/building")
+@RequestMapping("/buildings")
 @RequiredArgsConstructor
 public class BuildingController {
     private final BuildingService buildingService;

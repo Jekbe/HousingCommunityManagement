@@ -21,10 +21,9 @@ public class FileMapper {
     public static FileResponse toFileResponse(File file) {
         return FileResponse.builder()
                 .fileId(file.getId())
-                .Name(file.getName())
+                .name(file.getName())
                 .type(file.getFileType())
                 .uploadTime(file.getUploadTime())
-                .url(file.getFileUrl())
                 .sender(UserMapper.toUserShortResponse(file.getSender()))
                 .recipient(UserMapper.toUserShortResponse(file.getRecipient()))
                 .build();

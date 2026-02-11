@@ -1,6 +1,7 @@
 package pl.edu.uws.pp.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -70,6 +71,27 @@ public class FailureServiceImpl implements FailureService {
         }
 
         return FailureMapper.toFailureResponse(failure);
+    }
+
+    @Override
+    public Resource getPhoto(Long failureId, Long photoId, UserPrincipal principal) {
+        var failure = failureRepository.findById(failureId)
+                .orElseThrow(() -> new NotFoundException("Nie znaleziono awarii"));
+
+        var user = principal.user();
+        if (user.isRoleEqualed(Role.BUILDING_MANAGER)
+                && user.getManagerProfile().isNotManagingApartment(failure.getApartment())) {
+            throw new AccessDeniedException("Nie masz dostępu do tej awarii");
+        }
+        if (user.isRoleEqualed(Role.RESIDENT)
+                && ! user.getResidentProfile().isOwningApartment(failure.getApartment())) {
+            throw new AccessDeniedException("Nie masz dostępu do tej awarii");
+        }
+
+        var photo = photoRepository.findById(photoId)
+                .orElseThrow(() -> new NotFoundException("Nie znaleziono zdjęcia"));
+
+        return storageService.downloadFile(photo.getUrl());
     }
 
     @Override

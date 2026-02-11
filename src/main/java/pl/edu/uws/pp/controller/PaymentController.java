@@ -11,7 +11,7 @@ import pl.edu.uws.pp.service.PaymentService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/payment")
+@RequestMapping("/payments")
 @RequiredArgsConstructor
 public class PaymentController {
     private final PaymentService paymentService;

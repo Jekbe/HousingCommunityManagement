@@ -23,7 +23,7 @@ public class EventMapper {
     public static EventShortResponse toEventShortResponse(Event event) {
         return EventShortResponse.builder()
                 .eventId(event.getId())
-                .Name(event.getTitle())
+                .title(event.getTitle())
                 .eventTime(event.getEventTime())
                 .build();
     }
