@@ -5,6 +5,6 @@ import pl.edu.uws.pp.domain.enums.Role;
 public record LoginResponse(
         String token,
         Long id,
-        Role Role
+        Role role
 ) {
 }

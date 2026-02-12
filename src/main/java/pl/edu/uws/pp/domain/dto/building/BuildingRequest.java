@@ -7,7 +7,7 @@ public record BuildingRequest(
         String country,
         String city,
         String postalCode,
-        String Street,
+        String street,
         String buildingNumber,
         Long managerId
 ) {

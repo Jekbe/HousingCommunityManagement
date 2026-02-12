@@ -13,4 +13,5 @@ public interface UserService {
     UserShortResponse addApartmentForUser(Long userId, Long apartmentId, UserPrincipal principal);
     UserShortResponse deleteApartmentForUser(Long userId, Long apartmentId, UserPrincipal principal);
     void deleteUser(Long id);
+    List<UserShortResponse> getManagersList();
 }

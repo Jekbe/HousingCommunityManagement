@@ -8,6 +8,7 @@ import pl.edu.uws.pp.domain.dto.event.EventShortResponse;
 import pl.edu.uws.pp.domain.dto.failure.FailureShortResponse;
 import pl.edu.uws.pp.domain.dto.invoice.InvoiceShortResponse;
 import pl.edu.uws.pp.domain.dto.payment.PaymentShortResponse;
+import pl.edu.uws.pp.domain.entity.Apartment;
 import pl.edu.uws.pp.domain.entity.Manager;
 import pl.edu.uws.pp.domain.entity.Resident;
 import pl.edu.uws.pp.domain.entity.User;
@@ -30,7 +31,7 @@ public class UserMapper {
 
     public static UserShortResponse toUserShortResponse(User user){
         return UserShortResponse.builder()
-                .UserId(user.getId())
+                .userId(user.getId())
                 .name(user.getName())
                 .surname(user.getSurname())
                 .email(user.getEmail())
@@ -44,6 +45,16 @@ public class UserMapper {
 
     public static UserShortResponse toUserShortResponse(Manager manager){
         return toUserShortResponse(manager.getUser());
+    }
+
+    public static UserShortResponse toManagerShortResponse(Manager manager){
+        return UserShortResponse.builder()
+                .userId(manager.getId())
+                .name(manager.getUser().getName())
+                .surname(manager.getUser().getSurname())
+                .email(manager.getUser().getEmail())
+                .role(manager.getUser().getRole())
+                .build();
     }
 
     public static UserProfileResponse toUserProfileResponse(User viewer,

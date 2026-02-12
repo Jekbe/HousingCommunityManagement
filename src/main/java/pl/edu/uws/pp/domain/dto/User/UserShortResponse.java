@@ -5,7 +5,7 @@ import pl.edu.uws.pp.domain.enums.Role;
 
 @Builder
 public record UserShortResponse(
-        Long UserId,
+        Long userId,
         String name,
         String surname,
         String email,

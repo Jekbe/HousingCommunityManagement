@@ -234,4 +234,12 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new NotFoundException("Nie znaleziono user"));
         userRepository.delete(user);
     }
+
+    @Override
+    public List<UserShortResponse> getManagersList() {
+        var managersList = managerRepository.findAll();
+        return managersList.stream()
+                .map(UserMapper::toManagerShortResponse)
+                .toList();
+    }
 }

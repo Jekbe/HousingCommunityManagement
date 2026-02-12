@@ -26,7 +26,7 @@ public class BuildingMapper {
                 .country(request.country())
                 .city(request.city())
                 .postalCode(request.postalCode())
-                .street(request.Street())
+                .street(request.street())
                 .buildingNumber(request.buildingNumber())
                 .build();
     }

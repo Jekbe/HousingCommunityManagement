@@ -64,4 +64,10 @@ public class UserController {
     public void deleteUser(@PathVariable Long id){
         userService.deleteUser(id);
     }
+
+    @PreAuthorize("hasRole('HOUSING_MANAGER')")
+    @GetMapping("/managers")
+    public List<UserShortResponse> managersList(){
+        return userService.getManagersList();
+    }
 }
